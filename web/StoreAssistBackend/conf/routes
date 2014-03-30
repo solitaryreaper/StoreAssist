@@ -2,8 +2,10 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
-# Home page
-GET     /                           controllers.Application.index()
+# REST API
+GET     /                           controllers.SearchController.index()
+GET     /api/searchItem             controllers.SearchController.findItemLocation(storeIdentifier:String, item:String)
+GET     /api/searchStore            controllers.SearchController.findStore(storeIdentifier:String)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
