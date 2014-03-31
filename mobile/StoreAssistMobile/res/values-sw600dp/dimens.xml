@@ -4,5 +4,10 @@
          Customize dimensions originally defined in res/values/dimens.xml (such as
          screen margins) for sw600dp devices (e.g. 7" tablets) here.
     -->
+    
+    <!-- Nexus 7 Tablet -->
+    
+    <dimen name="edittext_font_size">22sp</dimen>
+    <dimen name="button_font_size">22sp</dimen>
 
 </resources>
