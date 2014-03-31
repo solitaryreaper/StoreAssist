@@ -40,8 +40,8 @@ public class MainActivity extends Activity
 	
 	private void locateItem()
 	{
-		
-		String[] urls = new String[] { "http://localhost:9000/api/searchItem?storeIdentifier=Madison&item=Toothpaste" };
+	//"http://pages.cs.wisc.edu/~prakhar/android_01.html"};//	
+		String[] urls = new String[] {"http://107.170.62.160:9000/api/searchItem?storeIdentifier=Madison&item=Pickle"};// "http://localhost:9000/api/searchItem?storeIdentifier=Madison&item=Toothpaste" };
 
 		DownloadDataTask downloadDataTask = new DownloadDataTask(this);
 		downloadDataTask.execute(urls);

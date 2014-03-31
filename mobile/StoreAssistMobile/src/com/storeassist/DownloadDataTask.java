@@ -64,8 +64,8 @@ public class DownloadDataTask extends AsyncTask<String, Void, String>
 	{
 		mProgressDialog = new ProgressDialog(mContext);
 		 
-		mProgressDialog.setTitle("Finding Location...");
-		mProgressDialog.setMessage("Please wait.");
+		mProgressDialog.setTitle("Please wait");
+		mProgressDialog.setMessage("Locating Item...");
 		mProgressDialog.setCancelable(false);
 		mProgressDialog.setIndeterminate(true);
 		mProgressDialog.show();

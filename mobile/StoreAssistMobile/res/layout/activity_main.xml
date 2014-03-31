@@ -30,7 +30,9 @@
         android:layout_centerHorizontal="true"
         android:text="@string/btn_str_locate"
         android:onClick="onButtonClick"
-        android:textSize="@dimen/button_font_size" />
+        android:textSize="@dimen/button_font_size"
+        android:background="@drawable/active_pressed_button_selector"
+        android:padding="@dimen/button_padding_horizontal" />
 
     <TextView
         android:id="@+id/text_error"

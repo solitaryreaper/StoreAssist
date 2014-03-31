@@ -7,6 +7,9 @@
     
     <!-- Nexus 7 Tablet -->
     
+    <dimen name="button_padding_horizontal">10dp</dimen>
+    
+    <!-- Main Activity -->
     <dimen name="edittext_font_size">22sp</dimen>
     <dimen name="button_font_size">22sp</dimen>
 

@@ -6,6 +6,7 @@
     
     <dimen name="edittext_font_size">18sp</dimen>
     <dimen name="button_font_size">18sp</dimen>
+    <dimen name="button_padding_horizontal">10dp</dimen>
     
     <!--  Main Activity -->
     <dimen name="activity_padding_vertical">100dp</dimen>
