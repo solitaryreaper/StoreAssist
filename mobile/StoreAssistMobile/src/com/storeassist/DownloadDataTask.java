@@ -87,6 +87,7 @@ public class DownloadDataTask extends AsyncTask<String, Void, String>
 			new JSONObject(response);
 			
 			// If yes, launch another activity with the result location
+			
 		}
 		catch (JSONException ex)
 		{
