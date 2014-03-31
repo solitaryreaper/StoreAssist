@@ -1,5 +1,11 @@
 package models;
 
+/**
+ * Model object to represent a retail store and its location details.
+ * 
+ * @author excelsior
+ *
+ */
 public class Store {
 	private long id;
 	private String address;

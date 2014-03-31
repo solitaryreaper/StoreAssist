@@ -1,10 +1,15 @@
 package models.service;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import models.ItemLocation;
 import models.Store;
+import models.utils.DBUtils;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -16,14 +21,7 @@ import com.google.common.collect.Maps;
  */
 public class SearchService {
 
-	private enum StoreIdentifier
-	{
-		STORE_NAME, // Name of the store like Madison Fresh
-		ADDRESS,	// Address of the store like 2110 University Avenue
-		ZIP_CODE,	// Zip Code of store like 53726
-		EXTERNAL_STORE_ID,	// Any external known unique store id
-		INTERNAL_STORE_ID	// Internal unique store id
-	}
+	private static Logger LOG = Logger.getLogger(SearchService.class.getSimpleName());
 	
 	/**
 	 * Searches all locations of items within a store.
@@ -52,7 +50,43 @@ public class SearchService {
 	 */
 	private static List<ItemLocation> searchItemLocations(String storeIdentifier, String item)
 	{
-		return getDummyLocation();
+		List<ItemLocation> locations = Lists.newArrayList();
+		
+		String sql = 
+				" select item.name AS name, item_location.location_id AS id, section.name AS section, aisle_shelf.aisle_name AS aisle, aisle_shelf.shelf_name AS shelf " +
+				" from item_info item" +
+				" join store store on (item.store_id = store.id)" +
+				" join item_location item_location on(item.item_id = item_location.item_id)" +
+				" join location location on (item_location.location_id = location.id)" +
+				" join section section on (location.section_id = section.id)" +
+				" join aisle_shelf aisle_shelf on (aisle_shelf.id = location.aisle_shelf_id)" +
+				" where LOWER(item.name) like '%" + item.toLowerCase() + "%'" + 
+				" and LOWER(store.name) like '%" + storeIdentifier.toLowerCase() + "%'";
+		
+		LOG.info("SQL : " + sql);
+		
+		Connection dbConn = DBUtils.getDBConnection();
+		PreparedStatement prepStmt = null;
+		
+		try {
+			prepStmt = dbConn.prepareStatement(sql);
+			ResultSet rs = prepStmt.executeQuery();
+			while(rs.next()) {
+				String section = rs.getString("section");
+				String aisle = rs.getString("aisle");
+				String shelf = rs.getString("shelf");
+				long locationId = rs.getLong("id");
+				
+				locations.add(new ItemLocation(locationId, section, aisle, shelf));
+			}
+			
+		}
+		catch(Exception e) {
+			LOG.severe("Failed to get locations. Reason : " + e.getMessage());
+			e.printStackTrace();
+		}
+		
+		return locations;
 	}
 	
 	/**
@@ -63,12 +97,5 @@ public class SearchService {
 	public static Store searchStore(String storeIdentifier)
 	{
 		return null;
-	}
-	
-	private static List<ItemLocation> getDummyLocation()
-	{
-		List<ItemLocation> locations = Lists.newArrayList();
-		locations.add(new ItemLocation(1, "Fruits", "A1", "2"));
-		return locations;
 	}
 }

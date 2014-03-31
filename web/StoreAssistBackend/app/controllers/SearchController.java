@@ -22,7 +22,7 @@ import play.mvc.Result;
  */
 public class SearchController extends Controller {
 	
-	private static Logger LOG = Logger.getAnonymousLogger();
+	private static Logger LOG = Logger.getLogger(SearchController.class.getSimpleName());
 	
 	private enum ErrorCode
 	{
@@ -52,6 +52,7 @@ public class SearchController extends Controller {
 			return ok(Json.toJson("MISSING MANDATORY ITEM PARAMETER"));
 		}
 		
+		LOG.info("Search Terms : (" + storeIdentifier + ", " + item + ")");
 		List<String> items = Arrays.asList(item.split(","));
 		Map<String, List<ItemLocation>> itemsLocations = SearchService.searchItemsLocations(storeIdentifier, items);
 		return ok(Json.toJson(itemsLocations));
