@@ -8,6 +8,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.storeassist.model.ItemLocation;
+import com.storeassist.model.ItemLocationQuery;
 import com.storeassist.utils.AppConstants;
 
 /**
@@ -61,20 +62,20 @@ public class MainActivity extends Activity
 		// TODO: Validate the item string 
 		String itemName = ((EditText) findViewById(R.id.edittext_item)).getText().toString();
 		
-		// Generate URL
-		String url = "http://" + AppConstants.ITEM_LOCATION_SERVER_IP + ":" + AppConstants.ITEM_LOCATION_SERVER_PORT + "/" +
-					"api/" + AppConstants.WEBAPI_SEARCH_ITEM + 
-					"?" + AppConstants.URLTAG_STORE_IDENTIFIER + "=Madison" +
-					"&" + AppConstants.URLTAG_ITEM + "=" + itemName;
+		ItemLocationQuery itemLocationQuery = new ItemLocationQuery("Madison", itemName);
 		
-		if(AppConstants.SHOW_LOGS)
-			Toast.makeText(this, url, Toast.LENGTH_LONG).show();
+//		// Generate URL
+//		String url = "http://" + AppConstants.ITEM_LOCATION_SERVER_IP + ":" + AppConstants.ITEM_LOCATION_SERVER_PORT + "/" +
+//					"api/" + AppConstants.WEBAPI_SEARCH_ITEM + 
+//					"?" + AppConstants.URLTAG_STORE_IDENTIFIER + "=Madison" +
+//					"&" + AppConstants.URLTAG_ITEM + "=" + itemName;
+		
 		
 		// Example: "http://107.170.62.160:9000/api/searchItem?storeIdentifier=Madison&item=Pickle"
-		String[] urls = new String[] {url};
+//		String[] urls = new String[] {url};
 
-		DownloadDataTask downloadDataTask = new DownloadDataTask(this);
-		downloadDataTask.execute(urls);
+		DownloadDataTask downloadDataTask = new DownloadDataTask(this, itemLocationQuery);
+		downloadDataTask.execute();
 	}
 	
 	/**
@@ -87,6 +88,9 @@ public class MainActivity extends Activity
 	public void displayItemLocation(ItemLocation itemLoc)
 	{
 		// TODO: Launch ItemLocationActivity passing in ItemLocation Object.
+		
+		Toast.makeText(this, "S: " + itemLoc.getSection() + " A: " + itemLoc.getAisle() + " Sh: " + itemLoc.getShelf(), Toast.LENGTH_SHORT).show();
+		
 	}
 	
 	/**

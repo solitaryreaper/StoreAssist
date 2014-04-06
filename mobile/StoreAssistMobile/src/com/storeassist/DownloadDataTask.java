@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import android.app.ProgressDialog;
@@ -13,49 +14,59 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.widget.Toast;
 import com.storeassist.model.ItemLocation;
+import com.storeassist.model.ItemLocationQuery;
 import com.storeassist.utils.AppConstants;
 
-public class DownloadDataTask extends AsyncTask<String, Void, String>
+public class DownloadDataTask extends AsyncTask<Void, Void, String>
 {
+	// Member Variables
 	ProgressDialog mProgressDialog = null;
+	ItemLocationQuery mItemLocationQuery = null;
 	Context mContext = null;
+	
+	// Methods
 	
 	/**
 	 * Constructor
 	 * 
 	 * @param c		Context of MainActivity
 	 */
-	public DownloadDataTask(Context c)
+	public DownloadDataTask(Context c, ItemLocationQuery itemLocationQuery)
 	{
 		mContext = c;
+		mItemLocationQuery = itemLocationQuery;
 	}
 	
+	/**
+	 * Method called in background thread. We're basically downloading result from the searchItem Web API. 
+	 */
 	@Override
-	protected String doInBackground(String... params)
+	protected String doInBackground(Void... params)
 	{ 
 		String response = "";
+		String url = mItemLocationQuery.get_WebAPI_SearchItem_URL(); 
 		 
-		for (String url : params)
+		if(AppConstants.SHOW_LOGS)
+			Toast.makeText(mContext, url, Toast.LENGTH_LONG).show();
+		
+		// HTTP CODE
+		DefaultHttpClient client = new DefaultHttpClient();
+		HttpGet httpGet = new HttpGet(url);
+		try
 		{
-			// HTTP CODE
-			DefaultHttpClient client = new DefaultHttpClient();
-			HttpGet httpGet = new HttpGet(url);
-			try
+			HttpResponse execute = client.execute(httpGet);
+			InputStream content = execute.getEntity().getContent();
+	 
+			BufferedReader buffer = new BufferedReader(new InputStreamReader(content));
+			String s = "";
+			while ((s = buffer.readLine()) != null)
 			{
-				HttpResponse execute = client.execute(httpGet);
-				InputStream content = execute.getEntity().getContent();
-		 
-				BufferedReader buffer = new BufferedReader(new InputStreamReader(content));
-				String s = "";
-				while ((s = buffer.readLine()) != null)
-				{
-					response += s;
-				}
-			} 
-			catch (Exception e)
-			{
-				e.printStackTrace();
+				response += s;
 			}
+		} 
+		catch (Exception e)
+		{
+			e.printStackTrace();
 		}
 		
 		return response;
@@ -83,20 +94,22 @@ public class DownloadDataTask extends AsyncTask<String, Void, String>
 		if(response == null || response.equals(""))
 			((MainActivity)mContext).displayErrorText(AppConstants.ERROR_ITEM_INVALID);
 			
+		Toast.makeText(mContext, response, Toast.LENGTH_LONG).show();
+		
 		// Check if the response is valid JSON
 		try
 		{
 			JSONObject responseJSONObject = new JSONObject(response);
 			
-			String sectionVal = responseJSONObject.getString(AppConstants.JSONTAG_SECTION);
-			String aisleVal = responseJSONObject.getString(AppConstants.JSONTAG_AISLE);
-			String shelfVal = responseJSONObject.getString(AppConstants.JSONTAG_SHELF);
+			JSONArray itemJSONArray = responseJSONObject.getJSONArray(mItemLocationQuery.getItemName());
+			JSONObject itemLocationObject = itemJSONArray.getJSONObject(0);
 			
-			((MainActivity)mContext).displayItemLocation(new ItemLocation(sectionVal, aisleVal, shelfVal));
-			
+			String sectionVal = itemLocationObject.getString(AppConstants.JSONTAG_SECTION);
+			String aisleVal = itemLocationObject.getString(AppConstants.JSONTAG_AISLE);
+			String shelfVal = itemLocationObject.getString(AppConstants.JSONTAG_SHELF);
 			
 			// If yes, launch another activity with the result location
-			
+			((MainActivity)mContext).displayItemLocation(new ItemLocation(sectionVal, aisleVal, shelfVal));
 		}
 		catch (JSONException ex)
 		{
@@ -106,7 +119,5 @@ public class DownloadDataTask extends AsyncTask<String, Void, String>
 			
 			((MainActivity)mContext).displayErrorText(AppConstants.ERROR_ITEM_INVALID);
 		}
-		
-		Toast.makeText(mContext, response, Toast.LENGTH_LONG).show();
 	}
 }
