@@ -8,6 +8,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.storeassist.model.ItemLocation;
+import com.storeassist.utils.AppConstants;
 
 /**
  * MainActivity
@@ -76,6 +77,13 @@ public class MainActivity extends Activity
 		downloadDataTask.execute(urls);
 	}
 	
+	/**
+	 * TODO: 
+	 * 1. Should accept an array of ItemLocation
+	 * 2. Should launch ItemLocationActivity passing in Array of ItemLocation Objects
+	 * 
+	 * @param itemLoc
+	 */
 	public void displayItemLocation(ItemLocation itemLoc)
 	{
 		// TODO: Launch ItemLocationActivity passing in ItemLocation Object.

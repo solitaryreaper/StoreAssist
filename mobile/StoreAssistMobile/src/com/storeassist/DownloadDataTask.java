@@ -13,6 +13,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.widget.Toast;
 import com.storeassist.model.ItemLocation;
+import com.storeassist.utils.AppConstants;
 
 public class DownloadDataTask extends AsyncTask<String, Void, String>
 {

@@ -9,6 +9,15 @@
     tools:context=".ItemLocationActivity"
     android:background="@drawable/background" >
 
+    <!-- Label: Item can be found at following locations -->
+    <TextView
+	        android:id="@+id/text_start_label:"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentTop="true"
+	        android:textSize="@dimen/edittext_font_size" />
+    
+    <!-- BLOCK: SECTION -->
     <RelativeLayout
         android:id="@+id/block_section"
         android:layout_width="wrap_content"
