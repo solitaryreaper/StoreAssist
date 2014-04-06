@@ -20,4 +20,9 @@ public class AppConstants
 	// URL Tags
 	public static final String URLTAG_STORE_IDENTIFIER = "storeIdentifier";
 	public static final String URLTAG_ITEM = "item";
+	
+	// RESPONSE JSON TAGS
+	public static final String JSONTAG_SECTION = "section";
+	public static final String JSONTAG_AISLE = "aisle";
+	public static final String JSONTAG_SHELF = "shelf";
 }

@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- FILE for Devices having SHORTEST WIDTH > 600dp (E.g., Nexus7 Tablet) -->
+    
+    <!-- Main Activity -->
     <string name="btn_str_locate">Locate Item</string>
 
 </resources>

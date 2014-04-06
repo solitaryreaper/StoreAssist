@@ -7,7 +7,19 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.storeassist.model.ItemLocation;
 
+/**
+ * MainActivity
+ * 
+ * Defines the main screen of the StoreAssist application. It should include the logic
+ * of getting the address of the place where the user is (using, Google Maps, GPS, etc, I 
+ * don't know). It should include a direct edit text for user to put in the item name
+ * and search it in the store. Cool, huh?
+ * 
+ * @author prakhar
+ *
+ */
 public class MainActivity extends Activity
 {
 	@Override
@@ -62,6 +74,11 @@ public class MainActivity extends Activity
 
 		DownloadDataTask downloadDataTask = new DownloadDataTask(this);
 		downloadDataTask.execute(urls);
+	}
+	
+	public void displayItemLocation(ItemLocation itemLoc)
+	{
+		// TODO: Launch ItemLocationActivity passing in ItemLocation Object.
 	}
 	
 	/**

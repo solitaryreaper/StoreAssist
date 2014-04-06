@@ -12,6 +12,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.widget.Toast;
+import com.storeassist.model.ItemLocation;
 
 public class DownloadDataTask extends AsyncTask<String, Void, String>
 {
@@ -84,7 +85,14 @@ public class DownloadDataTask extends AsyncTask<String, Void, String>
 		// Check if the response is valid JSON
 		try
 		{
-			new JSONObject(response);
+			JSONObject responseJSONObject = new JSONObject(response);
+			
+			String sectionVal = responseJSONObject.getString(AppConstants.JSONTAG_SECTION);
+			String aisleVal = responseJSONObject.getString(AppConstants.JSONTAG_AISLE);
+			String shelfVal = responseJSONObject.getString(AppConstants.JSONTAG_SHELF);
+			
+			((MainActivity)mContext).displayItemLocation(new ItemLocation(sectionVal, aisleVal, shelfVal));
+			
 			
 			// If yes, launch another activity with the result location
 			
