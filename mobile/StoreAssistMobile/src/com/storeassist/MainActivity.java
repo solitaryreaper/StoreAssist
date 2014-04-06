@@ -85,12 +85,13 @@ public class MainActivity extends Activity
 	 * 
 	 * @param itemLoc
 	 */
-	public void displayItemLocation(ItemLocation itemLoc)
+	public void displayItemLocation(ItemLocation[] itemLocArray)
 	{
+		// Debugging
+		for(ItemLocation itemLoc : itemLocArray)
+			Toast.makeText(this, "Se: " + itemLoc.getSection() + " Ai: " + itemLoc.getAisle() + " Sh: " + itemLoc.getShelf(), Toast.LENGTH_SHORT).show();
+		
 		// TODO: Launch ItemLocationActivity passing in ItemLocation Object.
-		
-		Toast.makeText(this, "S: " + itemLoc.getSection() + " A: " + itemLoc.getAisle() + " Sh: " + itemLoc.getShelf(), Toast.LENGTH_SHORT).show();
-		
 	}
 	
 	/**

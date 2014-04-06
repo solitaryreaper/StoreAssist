@@ -102,14 +102,24 @@ public class DownloadDataTask extends AsyncTask<Void, Void, String>
 			JSONObject responseJSONObject = new JSONObject(response);
 			
 			JSONArray itemJSONArray = responseJSONObject.getJSONArray(mItemLocationQuery.getItemName());
-			JSONObject itemLocationObject = itemJSONArray.getJSONObject(0);
 			
-			String sectionVal = itemLocationObject.getString(AppConstants.JSONTAG_SECTION);
-			String aisleVal = itemLocationObject.getString(AppConstants.JSONTAG_AISLE);
-			String shelfVal = itemLocationObject.getString(AppConstants.JSONTAG_SHELF);
+			int locationsCount = itemJSONArray.length();
+			ItemLocation[] itemLocationArray = new ItemLocation[locationsCount];
+			
+			for(int i = 0; i < locationsCount; i++)
+			{
+				JSONObject itemLocationObject = itemJSONArray.getJSONObject(0);
+				
+				String sectionVal = itemLocationObject.getString(AppConstants.JSONTAG_SECTION);
+				String aisleVal = itemLocationObject.getString(AppConstants.JSONTAG_AISLE);
+				String shelfVal = itemLocationObject.getString(AppConstants.JSONTAG_SHELF);
+				
+				ItemLocation itemLocation = new ItemLocation(sectionVal, aisleVal, shelfVal);
+				itemLocationArray[i] = itemLocation;
+			}
 			
 			// If yes, launch another activity with the result location
-			((MainActivity)mContext).displayItemLocation(new ItemLocation(sectionVal, aisleVal, shelfVal));
+			((MainActivity)mContext).displayItemLocation(itemLocationArray);
 		}
 		catch (JSONException ex)
 		{
