@@ -34,6 +34,7 @@
         android:background="@drawable/active_pressed_button_selector"
         android:padding="@dimen/button_padding_horizontal" />
 
+    <!-- Error Display -->
     <TextView
         android:id="@+id/text_error"
         android:layout_width="wrap_content"

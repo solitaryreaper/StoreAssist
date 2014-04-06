@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends Activity
 {
@@ -38,14 +40,35 @@ public class MainActivity extends Activity
 		}
 	}
 	
+	/**
+	 * Method to locate an item mentioned by the user in the EditText.
+	 */
 	private void locateItem()
 	{
-		String[] urls = new String[] {"http://107.170.62.160:9000/api/searchItem?storeIdentifier=Madison&item=Pickle"};
+		// TODO: Validate the item string 
+		String itemName = ((EditText) findViewById(R.id.edittext_item)).getText().toString();
+		
+		// Generate URL
+		String url = "http://" + AppConstants.ITEM_LOCATION_SERVER_IP + ":" + AppConstants.ITEM_LOCATION_SERVER_PORT + "/" +
+					"api/" + AppConstants.WEBAPI_SEARCH_ITEM + 
+					"?" + AppConstants.URLTAG_STORE_IDENTIFIER + "=Madison" +
+					"&" + AppConstants.URLTAG_ITEM + "=" + itemName;
+		
+		if(AppConstants.SHOW_LOGS)
+			Toast.makeText(this, url, Toast.LENGTH_LONG).show();
+		
+		// Example: "http://107.170.62.160:9000/api/searchItem?storeIdentifier=Madison&item=Pickle"
+		String[] urls = new String[] {url};
 
 		DownloadDataTask downloadDataTask = new DownloadDataTask(this);
 		downloadDataTask.execute(urls);
 	}
 	
+	/**
+	 * Method to display any error that comes up while searching location for the item.
+	 * 
+	 * @param errorCode
+	 */
 	public void displayErrorText(int errorCode)
 	{
 		String errorString = "";
