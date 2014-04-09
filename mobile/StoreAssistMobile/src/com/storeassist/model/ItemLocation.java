@@ -1,8 +1,12 @@
 package com.storeassist.model;
 
-public class ItemLocation
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class ItemLocation implements Parcelable
 {
 	// Member Variables
+	// TODO: Add Item Name 
 	protected String mSection;
 	protected String mAisle;
 	protected String mShelf;
@@ -19,6 +23,13 @@ public class ItemLocation
 		mSection = section;
 		mAisle = aisle;
 		mShelf = shelf;
+	}
+	
+	public ItemLocation(Parcel in)
+	{
+		mSection = in.readString();
+		mAisle = in.readString();
+		mShelf = in.readString();
 	}
 
 	/**
@@ -68,8 +79,37 @@ public class ItemLocation
 	{
 		mShelf = shelf;
 	}
+
+	@Override
+	public int describeContents()
+	{
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags)
+	{
+		dest.writeString(mSection);
+		dest.writeString(mAisle);
+		dest.writeString(mShelf);
+	}
 	
-	
+	public static final Parcelable.Creator<ItemLocation> CREATOR = new Creator<ItemLocation>()
+	{
+
+		@Override
+		public ItemLocation[] newArray(int size)
+		{
+			return new ItemLocation[size];
+		}
+
+		@Override
+		public ItemLocation createFromParcel(Parcel source)
+		{
+			return new ItemLocation(source);
+		}
+	};
 	
 	
 	

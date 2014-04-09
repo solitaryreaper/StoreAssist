@@ -87,6 +87,8 @@ public class DownloadDataTask extends AsyncTask<Void, Void, String>
 	@Override
 	protected void onPostExecute(String response)
 	{
+		int locationsCount = -1;
+		
 		// Dismiss the Progress Dialog first.
 		if (mProgressDialog != null)
 			mProgressDialog.dismiss();
@@ -103,31 +105,41 @@ public class DownloadDataTask extends AsyncTask<Void, Void, String>
 			
 			JSONArray itemJSONArray = responseJSONObject.getJSONArray(mItemLocationQuery.getItemName());
 			
-			int locationsCount = itemJSONArray.length();
+			locationsCount = itemJSONArray.length();
 			ItemLocation[] itemLocationArray = new ItemLocation[locationsCount];
 			
-			for(int i = 0; i < locationsCount; i++)
+			if(locationsCount > 0)
 			{
-				JSONObject itemLocationObject = itemJSONArray.getJSONObject(0);
+				for(int i = 0; i < locationsCount; i++)
+				{
+					JSONObject itemLocationObject = itemJSONArray.getJSONObject(0);
+					
+					String sectionVal = itemLocationObject.getString(AppConstants.JSONTAG_SECTION);
+					String aisleVal = itemLocationObject.getString(AppConstants.JSONTAG_AISLE);
+					String shelfVal = itemLocationObject.getString(AppConstants.JSONTAG_SHELF);
+					
+					ItemLocation itemLocation = new ItemLocation(sectionVal, aisleVal, shelfVal);
+					itemLocationArray[i] = itemLocation;
+				}
 				
-				String sectionVal = itemLocationObject.getString(AppConstants.JSONTAG_SECTION);
-				String aisleVal = itemLocationObject.getString(AppConstants.JSONTAG_AISLE);
-				String shelfVal = itemLocationObject.getString(AppConstants.JSONTAG_SHELF);
-				
-				ItemLocation itemLocation = new ItemLocation(sectionVal, aisleVal, shelfVal);
-				itemLocationArray[i] = itemLocation;
+				// If yes, launch another activity with the result location
+				((MainActivity)mContext).displayItemLocation(itemLocationArray);
 			}
-			
-			// If yes, launch another activity with the result location
-			((MainActivity)mContext).displayItemLocation(itemLocationArray);
 		}
 		catch (JSONException ex)
 		{
 			// If no, depending on the code, show 
 			//	TODO:- if item is not present in the store, OR,
 			//		- if item item entered is not valid.
-			
-			((MainActivity)mContext).displayErrorText(AppConstants.ERROR_ITEM_INVALID);
+		}
+		finally
+		{
+			if(locationsCount == 0)
+			{
+				((MainActivity)mContext).displayErrorText(AppConstants.ERROR_ITEM_NOT_PRESENT);
+			}
+			else
+				((MainActivity)mContext).displayErrorText(AppConstants.ERROR_ITEM_INVALID);
 		}
 	}
 }

@@ -4,6 +4,7 @@ public class AppConstants
 {
 	// App Related
 	public static final boolean SHOW_LOGS = false;
+	public static final String ITEM_LOCATION_ARRAY = "item_location_array";
 	
 	// Error Codes
 	public static final int ERROR_ITEM_INVALID = 1;
@@ -25,4 +26,5 @@ public class AppConstants
 	public static final String JSONTAG_SECTION = "section";
 	public static final String JSONTAG_AISLE = "aisle";
 	public static final String JSONTAG_SHELF = "shelf";
+	
 }

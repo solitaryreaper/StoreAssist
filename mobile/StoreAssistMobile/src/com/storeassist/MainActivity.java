@@ -1,6 +1,7 @@
 package com.storeassist;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.Toast;
 import com.storeassist.model.ItemLocation;
 import com.storeassist.model.ItemLocationQuery;
 import com.storeassist.utils.AppConstants;
+import com.storeassist.utils.AppUtils;
 
 /**
  * MainActivity
@@ -29,6 +31,13 @@ public class MainActivity extends Activity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		
+		setUI();
+	}
+	
+	private void setUI()
+	{
+		AppUtils.getAddress(this, 43.073156, -89.422204);
 	}
 
 	@Override
@@ -87,11 +96,9 @@ public class MainActivity extends Activity
 	 */
 	public void displayItemLocation(ItemLocation[] itemLocArray)
 	{
-		// Debugging
-		for(ItemLocation itemLoc : itemLocArray)
-			Toast.makeText(this, "Se: " + itemLoc.getSection() + " Ai: " + itemLoc.getAisle() + " Sh: " + itemLoc.getShelf(), Toast.LENGTH_SHORT).show();
-		
-		// TODO: Launch ItemLocationActivity passing in ItemLocation Object.
+		Intent i = new Intent(this, ItemLocationActivity.class);
+		i.putExtra(AppConstants.ITEM_LOCATION_ARRAY, itemLocArray);
+		startActivity(i);
 	}
 	
 	/**
@@ -113,6 +120,8 @@ public class MainActivity extends Activity
 		case AppConstants.ERROR_ITEM_NOT_PRESENT:
 			
 			// TODO : Add implementation here.
+			String itemName = ((EditText) findViewById(R.id.edittext_item)).getText().toString();
+			errorString = "Sorry, '" + itemName  +"' is not present in the store.";
 			break;
 			
 		}
