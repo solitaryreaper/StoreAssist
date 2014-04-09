@@ -27,4 +27,8 @@ public class AppConstants
 	public static final String JSONTAG_AISLE = "aisle";
 	public static final String JSONTAG_SHELF = "shelf";
 	
+	// Valid Country Codes (Countries with our customers)
+	public static final String[] CUSTOMER_COUNTRY_CODE_LIST = {"US", "IN"};
+	
+	
 }

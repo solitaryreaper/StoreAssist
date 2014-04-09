@@ -37,7 +37,12 @@ public class MainActivity extends Activity
 	
 	private void setUI()
 	{
-		AppUtils.getAddress(this, 43.073156, -89.422204);
+		AppUtils.getAddress(this, 43.073012, -89.397511);
+		
+		// Fresh Madison Market (704 University Ave): 43.073012, -89.397511
+
+		// 2110 University Avenue: Lat= 43.073156, Lon= -89.422204
+
 	}
 
 	@Override
