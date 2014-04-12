@@ -5,7 +5,7 @@
 # REST API
 GET     /                           controllers.SearchController.index()
 GET     /api/searchItem             controllers.SearchController.findItemLocation(storeIdentifier:String, item:String)
-GET     /api/searchStore            controllers.SearchController.findStore(storeIdentifier:String)
+GET     /api/searchStore            controllers.SearchController.findStore(storeId:String, name:String, address:String, zip:Integer, city:String)
 
 GET     /text/searchItem            controllers.MessageController.getItemLocation(textMsg:String)
 POST    /text/getItemLocation       controllers.MessageController.postItemLocation()

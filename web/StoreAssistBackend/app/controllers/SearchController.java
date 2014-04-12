@@ -10,7 +10,9 @@ import com.google.common.base.Strings;
 
 import models.ItemLocation;
 import models.Store;
+import models.StoreSearchMetadata;
 import models.service.SearchService;
+import models.service.SearchServiceImpl;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -24,6 +26,8 @@ import play.mvc.Result;
 public class SearchController extends Controller {
 	
 	private static Logger LOG = Logger.getLogger(SearchController.class.getSimpleName());
+	
+	private static SearchService searchService = new SearchServiceImpl();
 	
 	public static Result index()
 	{
@@ -42,7 +46,7 @@ public class SearchController extends Controller {
 		
 		LOG.severe("Search Terms : (" + storeIdentifier + ", " + item + ")");
 		List<String> items = Arrays.asList(item.split(","));
-		Map<String, List<ItemLocation>> itemsLocations = SearchService.searchItemsLocations(storeIdentifier, items);
+		Map<String, List<ItemLocation>> itemsLocations = searchService.searchItemsLocations(storeIdentifier, items);
 		
 		JsonNode node = Json.toJson(itemsLocations);
 		String output = node.toString();
@@ -54,9 +58,10 @@ public class SearchController extends Controller {
 	/**
 	 * Returns the identifier of a store
 	 */
-	public static Result findStore(String storeIdentifier)
+	public static Result findStore(String storeId, String name, String address,int zip, String city)
 	{
-		Store store = SearchService.searchStore(storeIdentifier);
-		return ok(Json.toJson(store));
+		StoreSearchMetadata meta = new StoreSearchMetadata(storeId, name, address, zip, city);
+		List<Store> stores = searchService.searchStore(meta);
+		return ok(Json.toJson(stores));
 	}
 }
