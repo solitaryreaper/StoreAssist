@@ -4,5 +4,14 @@
          Customize dimensions originally defined in res/values/dimens.xml (such as
          screen margins) for sw600dp devices (e.g. 7" tablets) here.
     -->
+    
+    <!-- FILE for Devices having SHORTEST WIDTH > 600dp (E.g., Nexus7 Tablet) -->
+
+    <!-- General -->
+    <dimen name="button_padding_horizontal">10dp</dimen>
+    
+    <!-- Main Activity -->
+    <dimen name="edittext_font_size">22sp</dimen>
+    <dimen name="button_font_size">22sp</dimen>
 
 </resources>

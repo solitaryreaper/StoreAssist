@@ -6,11 +6,71 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".MainActivity" >
+    tools:context=".MainActivity"
+    android:background="@drawable/background" >
 
+    <!-- "Welcome to": TODO- Display ONLY when we have identified the Store. -->
     <TextView
+        android:id="@+id/text_welcome_to"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/activity_padding_vertical"
+        android:layout_marginLeft="@dimen/activity_padding_horizontal"
+        android:layout_marginRight="@dimen/activity_padding_horizontal"
+        android:text="Welcome to:"
+        android:textSize="@dimen/edittext_font_size"
+        />
+    
+    <TextView
+        android:id="@+id/text_store_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/text_welcome_to"
+        android:layout_marginTop="@dimen/btn_margin_top"
+        android:layout_marginLeft="@dimen/activity_padding_horizontal"
+        android:layout_marginRight="@dimen/activity_padding_horizontal"
+        android:text="Dummy Store Info"
+        android:textSize="@dimen/edittext_font_size"
+        />
+    
+    <!-- ITEM NAME -->
+    <EditText 
+        android:id="@+id/edittext_item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/text_store_info"
+        android:singleLine="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/btn_margin_top"
+        android:layout_marginLeft="@dimen/activity_padding_horizontal"
+        android:layout_marginRight="@dimen/activity_padding_horizontal"
+        android:hint="@string/hint_search_item"
+        android:textSize="@dimen/edittext_font_size" />
+    
+    <!-- BUTTON- LOCATION ITEM -->
+    <Button
+        android:id="@+id/btn_locate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/hello_world" />
+        android:layout_below="@id/edittext_item"
+        android:layout_marginTop="@dimen/btn_margin_top"
+        android:layout_centerHorizontal="true"
+        android:text="@string/btn_str_locate"
+        android:onClick="onButtonClick"
+        android:textSize="@dimen/button_font_size"
+        android:background="@drawable/active_pressed_button_selector"
+        android:padding="@dimen/button_padding_horizontal" />
 
+    <!-- Error Display -->
+    <TextView
+        android:id="@+id/text_error"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/btn_locate"
+        android:layout_marginTop="@dimen/btn_margin_top"
+        android:layout_centerHorizontal="true"
+        android:text="Any error text will appear here..."
+        android:textSize="@dimen/edittext_font_size"
+        android:visibility="gone" />
+    
 </RelativeLayout>
