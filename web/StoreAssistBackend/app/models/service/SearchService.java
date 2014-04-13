@@ -17,20 +17,20 @@ public interface SearchService {
 	/**
 	 * Searches all locations of items within a store.
 	 * 
-	 * @param store	- Identifier for store.
+	 * @param storeId	- Identifier for store.
 	 * @param items	- List of items to be searched.
 	 * @return List of all locations for items in the specified store.
 	 */
-	public Map<String, List<ItemLocation>> searchItemsLocations(String storeIdentifier, List<String> items);
+	public Map<String, List<ItemLocation>> searchItemsLocations(int storeId, List<String> items);
 	
 	/**
 	 * Search all locations of  an item in a store.
 	 * 
-	 * @param store	- Identifier for store.
+	 * @param storeId	- Identifier for store.
 	 * @param item	- Item name.
 	 * @return	List of all locations for an item in the specified store.
 	 */
-	public List<ItemLocation> searchItemLocations(String storeIdentifier, String item);
+	public List<ItemLocation> searchItemLocations(int storeId, String item);
 	
 	/**
 	 * Searches for stores based on the input store identifier.

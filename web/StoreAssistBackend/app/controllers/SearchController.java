@@ -37,16 +37,16 @@ public class SearchController extends Controller {
 	/**
 	 * Returns the location of items within a store.
 	 */
-	public static Result findItemLocation(String storeIdentifier, String item)
+	public static Result findItemLocation(int storeId, String item)
 	{
 		if(Strings.isNullOrEmpty(item) || item.trim().length() < 2) {
 			LOG.severe("Please specify item to search.");
 			return ok(Json.toJson("MISSING MANDATORY ITEM PARAMETER"));
 		}
 		
-		LOG.severe("Search Terms : (" + storeIdentifier + ", " + item + ")");
+		LOG.severe("Search Terms : (" + storeId + ", " + item + ")");
 		List<String> items = Arrays.asList(item.split(","));
-		Map<String, List<ItemLocation>> itemsLocations = searchService.searchItemsLocations(storeIdentifier, items);
+		Map<String, List<ItemLocation>> itemsLocations = searchService.searchItemsLocations(storeId, items);
 		
 		JsonNode node = Json.toJson(itemsLocations);
 		String output = node.toString();
@@ -56,12 +56,26 @@ public class SearchController extends Controller {
 	}
 	
 	/**
-	 * Returns the identifier of a store
+	 * Returns list of stores in a zip code.
 	 */
-	public static Result findStore(String storeId, String name, String address,int zip, String city)
+	public static Result findStoresByZipCode(int zipCode)
 	{
-		StoreSearchMetadata meta = new StoreSearchMetadata(storeId, name, address, zip, city);
-		List<Store> stores = searchService.searchStore(meta);
+		StoreSearchMetadata searchMeta = new StoreSearchMetadata();
+		searchMeta.setZip(zipCode);
+		List<Store> stores = searchService.searchStore(searchMeta);
+		return ok(Json.toJson(stores));
+	}
+	
+	/**
+	 * Returns list of stores corresponding to an address.
+	 * @param address
+	 * @return
+	 */
+	public static Result findStoresByAddress(String address)
+	{
+		StoreSearchMetadata searchMeta = new StoreSearchMetadata();
+		searchMeta.setAddress(address);
+		List<Store> stores = searchService.searchStore(searchMeta);
 		return ok(Json.toJson(stores));
 	}
 }

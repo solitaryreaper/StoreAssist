@@ -25,18 +25,18 @@ public class SearchServiceImpl implements SearchService {
 	private static Logger LOG = Logger.getLogger(SearchService.class.getSimpleName());
 
 	@Override
-	public Map<String, List<ItemLocation>> searchItemsLocations(String storeIdentifier, List<String> items)
+	public Map<String, List<ItemLocation>> searchItemsLocations(int storeId, List<String> items)
 	{
 		Map<String, List<ItemLocation>> itemsLocations = Maps.newHashMap();
 		for(String item : items) {
-			itemsLocations.put(item, searchItemLocations(storeIdentifier, item));
+			itemsLocations.put(item, searchItemLocations(storeId, item));
 		}
 		
 		return itemsLocations;
 	}
 
 	@Override
-	public List<ItemLocation> searchItemLocations(String storeIdentifier, String item)
+	public List<ItemLocation> searchItemLocations(int storeId, String item)
 	{
 		List<ItemLocation> locations = Lists.newArrayList();
 		
@@ -49,7 +49,7 @@ public class SearchServiceImpl implements SearchService {
 				" join section section on (location.section_id = section.id)" +
 				" join aisle_shelf aisle_shelf on (aisle_shelf.id = location.aisle_shelf_id)" +
 				" where LOWER(item.name) like '%" + item.toLowerCase() + "%'" + 
-				" and LOWER(store.name) like '%" + storeIdentifier.toLowerCase() + "%'";
+				" and store.id = " + storeId;
 		
 		LOG.info("SQL : " + sql);
 		
@@ -79,7 +79,7 @@ public class SearchServiceImpl implements SearchService {
 	@Override
 	public List<Store> searchStore(StoreSearchMetadata storeMeta)
 	{
-		String searchStoreId = storeMeta.getStoreId();
+		Integer searchStoreId = storeMeta.getStoreId();
 		String searchName = storeMeta.getName();
 		String searchAddress = storeMeta.getAddress();
 		Integer searchZip = storeMeta.getZip();
@@ -93,7 +93,7 @@ public class SearchServiceImpl implements SearchService {
 		 * Else, base the search results on remaining parameters.
 		 */
 		if(searchStoreId != null) {
-			sql.append(" id = '").append(searchStoreId).append("'");
+			sql.append(" id = ").append(searchStoreId);
 		}
 		else if(searchName != null) {
 			sql.append(" LOWER(name) LIKE '%").append(searchName.toLowerCase()).append("%'");
@@ -118,7 +118,7 @@ public class SearchServiceImpl implements SearchService {
 			prepStmt = dbConn.prepareStatement(sql.toString());
 			ResultSet rs = prepStmt.executeQuery();
 			while(rs.next()) {
-				String id = rs.getString("id");
+				int id = rs.getInt("id");
 				String name = rs.getString("name");
 				String address = rs.getString("address");
 				int zip = rs.getInt("zip");

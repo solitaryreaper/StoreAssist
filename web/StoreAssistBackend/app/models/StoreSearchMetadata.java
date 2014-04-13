@@ -8,7 +8,7 @@ import com.google.common.base.Strings;
  *
  */
 public class StoreSearchMetadata {
-	private String storeId;
+	private Integer storeId;
 	private String name;
 	private String address;
 	private Integer zip;
@@ -19,9 +19,9 @@ public class StoreSearchMetadata {
 		
 	}
 	
-	public StoreSearchMetadata(String storeId, String name, String address, Integer zip, String city) {
+	public StoreSearchMetadata(Integer storeId, String name, String address, Integer zip, String city) {
 		super();
-		if(!Strings.isNullOrEmpty(storeId)) {
+		if(storeId != null) {
 			this.storeId = storeId;			
 		}
 		if(!Strings.isNullOrEmpty(name)) {
@@ -43,15 +43,16 @@ public class StoreSearchMetadata {
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("StoreSearchMetadata [storeId=").append(storeId)
-				.append(", address=").append(address).append(", zip=")
-				.append(zip).append(", city=").append(city).append("]");
+				.append(", name=").append(name).append(", address=")
+				.append(address).append(", zip=").append(zip).append(", city=")
+				.append(city).append("]");
 		return builder.toString();
 	}
-	
-	public String getStoreId() {
+
+	public Integer getStoreId() {
 		return storeId;
 	}
-	public void setStoreId(String storeId) {
+	public void setStoreId(Integer storeId) {
 		this.storeId = storeId;
 	}
 	

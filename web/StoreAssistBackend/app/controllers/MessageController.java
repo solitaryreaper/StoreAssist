@@ -56,7 +56,7 @@ public class MessageController extends Controller {
 		}
 		
 		String[] msgParts = textMsg.split(MESSAGE_DELIMITER);
-		String storeIdentifier = msgParts[0].trim();
+		int storeIdentifier = Integer.parseInt(msgParts[0].trim());
 		String item = msgParts[1].trim();
 		
 		if(Strings.isNullOrEmpty(item) || item.trim().length() < 2) {
@@ -83,22 +83,22 @@ public class MessageController extends Controller {
 		}
 		
 		String[] msgParts = textMsg.split(MESSAGE_DELIMITER);
-		String storeIdentifier = msgParts[0].trim();
+		int storeIdentifier = Integer.parseInt(msgParts[0].trim());
 		String item = msgParts[1].trim();
 		
 		return findItemLocation(storeIdentifier, item);
 	}
 	
-	private static Result findItemLocation(String storeIdentifier, String item)
+	private static Result findItemLocation(int storeId, String item)
 	{
 		if(Strings.isNullOrEmpty(item) || item.trim().length() < 2) {
 			LOG.severe("Please specify item to search.");
 			return ok(Json.toJson("MISSING MANDATORY ITEM PARAMETER"));
 		}
 		
-		LOG.severe("Search Terms : (" + storeIdentifier + ", " + item + ")");
+		LOG.severe("Search Terms : (" + storeId + ", " + item + ")");
 		List<String> items = Arrays.asList(item.split(","));
-		Map<String, List<ItemLocation>> itemsLocations = searchService.searchItemsLocations(storeIdentifier, items);
+		Map<String, List<ItemLocation>> itemsLocations = searchService.searchItemsLocations(storeId, items);
 		
 		StringBuilder output = new StringBuilder();
 		output.append("[");
