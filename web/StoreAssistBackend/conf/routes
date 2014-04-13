@@ -5,6 +5,7 @@
 # REST API
 GET     /                           controllers.SearchController.index()
 GET     /api/searchItem             controllers.SearchController.searchItemLocation(storeId:Integer, item:String)
+GET     /api/getItemNameProposals   controllers.SearchController.getItemNameAutoCompletions(itemRegex:String, storeId:Integer)
 GET     /api/searchStoreByZip       controllers.SearchController.searchStoresByZipCode(zip:Integer)
 GET     /api/searchStoreByAddress   controllers.SearchController.searchStoresByAddress(address:String)
 

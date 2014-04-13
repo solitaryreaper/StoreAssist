@@ -23,7 +23,7 @@ public class SearchServiceTest {
 			public void run() {
 				StoreSearchMetadata meta = new StoreSearchMetadata();
 				meta.setStoreId(1);
-				Logger.info("Metadata : " + meta.toString());
+				Logger.debug("Metadata : " + meta.toString());
 				
 				List<Store> stores = searchService.searchStore(meta);
 				assertThat(stores.size()).isEqualTo(1);
@@ -37,7 +37,7 @@ public class SearchServiceTest {
 			public void run() {
 				StoreSearchMetadata meta = new StoreSearchMetadata();
 				meta.setName("fresh madison market");
-				Logger.info("Metadata : " + meta.toString());
+				Logger.debug("Metadata : " + meta.toString());
 				
 				List<Store> stores = searchService.searchStore(meta);
 				assertThat(stores.size()).isEqualTo(1);
@@ -51,7 +51,7 @@ public class SearchServiceTest {
 			public void run() {
 				StoreSearchMetadata meta = new StoreSearchMetadata();
 				meta.setAddress("703 university avenue");
-				Logger.info("Metadata : " + meta.toString());
+				Logger.debug("Metadata : " + meta.toString());
 				
 				List<Store> stores = searchService.searchStore(meta);
 				assertThat(stores.size()).isEqualTo(1);
@@ -67,7 +67,7 @@ public class SearchServiceTest {
 				// This address is wrong but still the search should work because of correct zip.
 				meta.setAddress("710 university ave.");
 				meta.setZip(53715);
-				Logger.info("Metadata : " + meta.toString());
+				Logger.debug("Metadata : " + meta.toString());
 				
 				List<Store> stores = searchService.searchStore(meta);
 				assertThat(stores.size()).isEqualTo(1);
@@ -83,7 +83,7 @@ public class SearchServiceTest {
 				// This address is wrong but still the search should work because of correct zip.
 				meta.setAddress("710 university ave.");
 				meta.setZip(53714);
-				Logger.info("Metadata : " + meta.toString());
+				Logger.debug("Metadata : " + meta.toString());
 				
 				List<Store> stores = searchService.searchStore(meta);
 				assertThat(stores.size()).isEqualTo(0);
@@ -95,13 +95,13 @@ public class SearchServiceTest {
 	public void testAutoCompleteItemNames() {
 		running(fakeApplication(), new Runnable() {
 			public void run() {
-				List<String> items = searchService.searchItemsByName("pickle", Constants.FRESH_MADISON_MARKET);
-				assertThat(items.size()).isEqualTo(1);
+				List<String> items = searchService.searchItemsByName("vegetable", Constants.FRESH_MADISON_MARKET);
+				assertThat(items.size()).isEqualTo(2);
 				
-				items = searchService.searchItemsByName("pick", Constants.FRESH_MADISON_MARKET);
-				assertThat(items.size()).isEqualTo(1);
+				items = searchService.searchItemsByName("veget", Constants.FRESH_MADISON_MARKET);
+				assertThat(items.size()).isEqualTo(2);
 				
-				items = searchService.searchItemsByName("tooth", Constants.FRESH_MADISON_MARKET);
+				items = searchService.searchItemsByName("lamp", Constants.FRESH_MADISON_MARKET);
 				assertThat(items.size()).isEqualTo(0);	
 			}
 		});
