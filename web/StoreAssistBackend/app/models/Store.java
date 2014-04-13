@@ -7,14 +7,16 @@ package models;
  *
  */
 public class Store {
-	private long id;
+	private Integer id;
+	private String name;
 	private String address;
-	private int zipCode;
+	private Integer zipCode;
 	private String city;
 
-	public Store(long id, String address, int zipCode, String city) {
+	public Store(Integer id, String name, String address, int zipCode, String city) {
 		super();
 		this.id = id;
+		this.name = name;
 		this.address = address;
 		this.zipCode = zipCode;
 		this.city = city;
@@ -29,12 +31,20 @@ public class Store {
 		return builder.toString();
 	}
 
-	public long getId() {
+	public Integer getId() {
 		return id;
 	}
-	public void setId(long id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
 	public String getAddress() {
 		return address;
 	}
@@ -53,5 +63,4 @@ public class Store {
 	public void setCity(String city) {
 		this.city = city;
 	}
-	
 }

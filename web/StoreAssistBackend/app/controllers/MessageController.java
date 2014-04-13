@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 
 import models.ItemLocation;
 import models.service.SearchService;
+import models.service.SearchServiceImpl;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -28,6 +29,7 @@ import com.twilio.sdk.resource.instance.Account;
 public class MessageController extends Controller {
 
 	private static Logger LOG = Logger.getLogger(MessageController.class.getSimpleName());
+	private static SearchService searchService = new SearchServiceImpl();
 	
 	// Your Account Sid and Auth Token from twilio.com/user/account
 	private static String TWILIO_ACCOUNT_SID = "ACc5e06276e9acc6426aab3b0e57dc8809";
@@ -54,7 +56,7 @@ public class MessageController extends Controller {
 		}
 		
 		String[] msgParts = textMsg.split(MESSAGE_DELIMITER);
-		String storeIdentifier = msgParts[0].trim();
+		int storeIdentifier = Integer.parseInt(msgParts[0].trim());
 		String item = msgParts[1].trim();
 		
 		if(Strings.isNullOrEmpty(item) || item.trim().length() < 2) {
@@ -81,22 +83,22 @@ public class MessageController extends Controller {
 		}
 		
 		String[] msgParts = textMsg.split(MESSAGE_DELIMITER);
-		String storeIdentifier = msgParts[0].trim();
+		int storeIdentifier = Integer.parseInt(msgParts[0].trim());
 		String item = msgParts[1].trim();
 		
 		return findItemLocation(storeIdentifier, item);
 	}
 	
-	private static Result findItemLocation(String storeIdentifier, String item)
+	private static Result findItemLocation(int storeId, String item)
 	{
 		if(Strings.isNullOrEmpty(item) || item.trim().length() < 2) {
 			LOG.severe("Please specify item to search.");
 			return ok(Json.toJson("MISSING MANDATORY ITEM PARAMETER"));
 		}
 		
-		LOG.severe("Search Terms : (" + storeIdentifier + ", " + item + ")");
+		LOG.severe("Search Terms : (" + storeId + ", " + item + ")");
 		List<String> items = Arrays.asList(item.split(","));
-		Map<String, List<ItemLocation>> itemsLocations = SearchService.searchItemsLocations(storeIdentifier, items);
+		Map<String, List<ItemLocation>> itemsLocations = searchService.searchItemsLocations(storeId, items);
 		
 		StringBuilder output = new StringBuilder();
 		output.append("[");

@@ -10,7 +10,9 @@ import com.google.common.base.Strings;
 
 import models.ItemLocation;
 import models.Store;
+import models.StoreSearchMetadata;
 import models.service.SearchService;
+import models.service.SearchServiceImpl;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -25,6 +27,8 @@ public class SearchController extends Controller {
 	
 	private static Logger LOG = Logger.getLogger(SearchController.class.getSimpleName());
 	
+	private static SearchService searchService = new SearchServiceImpl();
+	
 	public static Result index()
 	{
 		return ok("Welcome to StoreAssist ..");
@@ -33,16 +37,16 @@ public class SearchController extends Controller {
 	/**
 	 * Returns the location of items within a store.
 	 */
-	public static Result findItemLocation(String storeIdentifier, String item)
+	public static Result searchItemLocation(int storeId, String item)
 	{
 		if(Strings.isNullOrEmpty(item) || item.trim().length() < 2) {
 			LOG.severe("Please specify item to search.");
 			return ok(Json.toJson("MISSING MANDATORY ITEM PARAMETER"));
 		}
 		
-		LOG.severe("Search Terms : (" + storeIdentifier + ", " + item + ")");
+		LOG.severe("Search Terms : (" + storeId + ", " + item + ")");
 		List<String> items = Arrays.asList(item.split(","));
-		Map<String, List<ItemLocation>> itemsLocations = SearchService.searchItemsLocations(storeIdentifier, items);
+		Map<String, List<ItemLocation>> itemsLocations = searchService.searchItemsLocations(storeId, items);
 		
 		JsonNode node = Json.toJson(itemsLocations);
 		String output = node.toString();
@@ -52,11 +56,26 @@ public class SearchController extends Controller {
 	}
 	
 	/**
-	 * Returns the identifier of a store
+	 * Returns list of stores in a zip code.
 	 */
-	public static Result findStore(String storeIdentifier)
+	public static Result searchStoresByZipCode(int zipCode)
 	{
-		Store store = SearchService.searchStore(storeIdentifier);
-		return ok(Json.toJson(store));
+		StoreSearchMetadata searchMeta = new StoreSearchMetadata();
+		searchMeta.setZip(zipCode);
+		List<Store> stores = searchService.searchStore(searchMeta);
+		return ok(Json.toJson(stores));
+	}
+	
+	/**
+	 * Returns list of stores corresponding to an address.
+	 * @param address
+	 * @return
+	 */
+	public static Result searchStoresByAddress(String address)
+	{
+		StoreSearchMetadata searchMeta = new StoreSearchMetadata();
+		searchMeta.setAddress(address);
+		List<Store> stores = searchService.searchStore(searchMeta);
+		return ok(Json.toJson(stores));
 	}
 }
