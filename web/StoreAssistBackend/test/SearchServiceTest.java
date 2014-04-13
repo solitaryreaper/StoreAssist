@@ -4,6 +4,7 @@ import static play.test.Helpers.running;
 
 import java.util.List;
 
+import models.Constants;
 import models.Store;
 import models.StoreSearchMetadata;
 import models.service.SearchService;
@@ -90,4 +91,19 @@ public class SearchServiceTest {
 		});
 	}	
 	
+	@Test
+	public void testAutoCompleteItemNames() {
+		running(fakeApplication(), new Runnable() {
+			public void run() {
+				List<String> items = searchService.searchItemsByName("pickle", Constants.FRESH_MADISON_MARKET);
+				assertThat(items.size()).isEqualTo(1);
+				
+				items = searchService.searchItemsByName("pick", Constants.FRESH_MADISON_MARKET);
+				assertThat(items.size()).isEqualTo(1);
+				
+				items = searchService.searchItemsByName("tooth", Constants.FRESH_MADISON_MARKET);
+				assertThat(items.size()).isEqualTo(0);	
+			}
+		});
+	}		
 }

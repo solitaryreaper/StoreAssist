@@ -4,9 +4,9 @@
 
 # REST API
 GET     /                           controllers.SearchController.index()
-GET     /api/searchItem             controllers.SearchController.findItemLocation(storeId:Integer, item:String)
-GET     /api/searchStoreByZip       controllers.SearchController.findStoresByZipCode(zip:Integer)
-GET     /api/searchStoreByAddress   controllers.SearchController.findStoresByAddress(address:String)
+GET     /api/searchItem             controllers.SearchController.searchItemLocation(storeId:Integer, item:String)
+GET     /api/searchStoreByZip       controllers.SearchController.searchStoresByZipCode(zip:Integer)
+GET     /api/searchStoreByAddress   controllers.SearchController.searchStoresByAddress(address:String)
 
 GET     /text/searchItem            controllers.MessageController.getItemLocation(textMsg:String)
 POST    /text/getItemLocation       controllers.MessageController.postItemLocation()

@@ -24,6 +24,16 @@ public interface SearchService {
 	public Map<String, List<ItemLocation>> searchItemsLocations(int storeId, List<String> items);
 	
 	/**
+	 * Suggests item names for a store, based on the partial item name inputted by the user. This
+	 * would server the auto-complete feature of the application.
+	 * 
+	 * @param itemName	-	a partial item name
+	 * @param storeId	- 	id for the store where items have to be searched.
+	 * @return	List of items that match the partial item name regex.
+	 */
+	public List<String> searchItemsByName(String itemName, int storeId);
+	
+	/**
 	 * Search all locations of  an item in a store.
 	 * 
 	 * @param storeId	- Identifier for store.

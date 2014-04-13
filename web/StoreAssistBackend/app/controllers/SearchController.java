@@ -37,7 +37,7 @@ public class SearchController extends Controller {
 	/**
 	 * Returns the location of items within a store.
 	 */
-	public static Result findItemLocation(int storeId, String item)
+	public static Result searchItemLocation(int storeId, String item)
 	{
 		if(Strings.isNullOrEmpty(item) || item.trim().length() < 2) {
 			LOG.severe("Please specify item to search.");
@@ -58,7 +58,7 @@ public class SearchController extends Controller {
 	/**
 	 * Returns list of stores in a zip code.
 	 */
-	public static Result findStoresByZipCode(int zipCode)
+	public static Result searchStoresByZipCode(int zipCode)
 	{
 		StoreSearchMetadata searchMeta = new StoreSearchMetadata();
 		searchMeta.setZip(zipCode);
@@ -71,7 +71,7 @@ public class SearchController extends Controller {
 	 * @param address
 	 * @return
 	 */
-	public static Result findStoresByAddress(String address)
+	public static Result searchStoresByAddress(String address)
 	{
 		StoreSearchMetadata searchMeta = new StoreSearchMetadata();
 		searchMeta.setAddress(address);

@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import models.Constants;
 import models.ItemLocation;
 import models.Store;
 import models.StoreSearchMetadata;
@@ -74,6 +75,34 @@ public class SearchServiceImpl implements SearchService {
 		}
 		
 		return locations;
+	}
+	
+	@Override
+	public List<String> searchItemsByName(String itemName, int storeId)
+	{
+		List<String> items = Lists.newArrayList();
+		String sql = 
+			"SELECT name FROM " + Constants.DB_ITEM_TABLE + " WHERE LOWER(name) LIKE '%" + 
+			itemName.toLowerCase() + "%'";
+		
+		Connection dbConn = DBUtils.getDBConnection();
+		PreparedStatement prepStmt = null;
+		try {
+			prepStmt = dbConn.prepareStatement(sql.toString());
+			ResultSet rs = prepStmt.executeQuery();
+			while(rs.next()) {
+				String name = rs.getString("name");
+				items.add(name);
+			}
+		}
+		catch(Exception e) {
+			LOG.severe("Failed to get locations. Reason : " + e.getMessage());
+			e.printStackTrace();
+		}		
+		
+		// TODO : show only a subset of most relevant items. Need to come up with a simple ranking
+		// function for the same.
+		return items;
 	}
 	
 	@Override
