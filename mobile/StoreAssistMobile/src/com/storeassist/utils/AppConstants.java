@@ -4,6 +4,7 @@ public class AppConstants
 {
 	// App Related
 	public static final boolean SHOW_LOGS = false;
+	public static final boolean DEMO_BUILD = true;
 	public static final String ITEM_LOCATION_ARRAY = "item_location_array";
 	
 	// Error Codes

@@ -6,12 +6,11 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 import com.storeassist.model.ItemLocation;
 import com.storeassist.model.ItemLocationQuery;
 import com.storeassist.utils.AppConstants;
-import com.storeassist.utils.AppUtils;
 
 /**
  * MainActivity
@@ -37,14 +36,38 @@ public class MainActivity extends Activity
 	
 	private void setUI()
 	{
-		AppUtils.getAddress(this, 43.073012, -89.397511);
 		
-		// Fresh Madison Market (704 University Ave): 43.073012, -89.397511
-
-		// 2110 University Avenue: Lat= 43.073156, Lon= -89.422204
+		if(AppConstants.DEMO_BUILD)
+		{
+			TextView storeInfoTextView = (TextView) findViewById(R.id.text_store_info);
+			storeInfoTextView.setText("Fresh Madison Market\n704 University Avenue, Madison, WI");
+		}
+		else
+		{
+			// Fresh Madison Market (704 University Ave): 43.073012, -89.397511
+			// 2110 University Avenue: Lat= 43.073156, Lon= -89.422204
+//			List<Address> validAddresses = AppUtils.getAddress(this, 43.073012, -89.397511);
+//			
+//			if(validAddresses.size() == 1)
+//			{
+//				// Show the Store Name and Address on the TextView.
+//			}
+//			else
+//			{
+//				// TODO: Show a dropdown. Ask user to select the store.
+//			}
+		}
+		
+		populateMapImage();
 
 	}
 
+	public void populateMapImage()
+	{
+		ImageView streetMapImage = (ImageView) findViewById(R.id.image_street_map);
+		streetMapImage.setImageResource(R.drawable.demo_street_map);
+	}
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{

@@ -10,6 +10,15 @@ import android.util.Log;
 public class AppUtils
 {
 
+	/**
+	 * Method to get valid addresses using GeoCoder, given the user's current 
+	 * location in terms of latitude and longitude.
+	 * 
+	 * @param c				Context
+	 * @param latitude		Latitude
+	 * @param longitude		Longitude
+	 * @return				List of valid addresses
+	 */
 	public static List<Address> getAddress(Context c, double latitude, double longitude)
 	{
 		Log.d("AppUtils", "getAddress() :: Method called");
@@ -28,7 +37,6 @@ public class AppUtils
 				addresses = filterAddress(addresses);
 				printAddresses(addresses, "Filtered Address", true);
 			}
-
 		} 
 		catch (Exception e)
 		{
@@ -40,6 +48,12 @@ public class AppUtils
 //		return strCompAdd;
 	}
 	
+	/**
+	 * Method to filter the addresses returned by the GeoCoder.
+	 * 
+	 * @param addresses		List of addresses returned by the GeoCoder
+	 * @return				Valid Addresses
+	 */
 	public static List<Address> filterAddress(List<Address> addresses)
 	{
 		if(addresses == null || addresses.size() == 0)
@@ -55,11 +69,12 @@ public class AppUtils
 			if(!isValidPostalCode(address.getPostalCode()))
 				continue;
 			
+			if(!isValidAddressLine3(address.getAddressLine(2)))
+				continue;
+			
 //			String featureName = addresses.get(i).getFeatureName(); // May be Store Name
-//			String postalCode = addresses.get(i).getPostalCode(); // May help us getting stores from our Database
 //			String street 	= address.getAddressLine(0);
 //			String city 	= address.getAddressLine(1);
-//			String country 	= address.getAddressLine(2);
 			
 			// If everything looks fine, just add it to the new list.
 			filteredAddress.add(address);	
@@ -71,6 +86,12 @@ public class AppUtils
 		return filteredAddress;
 	}
 	
+	/**
+	 * Method to check if the postal code is valid by running it through a regular expression.
+	 * 
+	 * @param inputPostalCode	Postal Code in question		
+	 * @return					Validity of Postal Code
+	 */
 	public static boolean isValidPostalCode(String inputPostalCode)
 	{
 		/*
@@ -85,6 +106,26 @@ public class AppUtils
 		return false;
 	}
 	
+	/**
+	 * Method to check if the address line-3 is non-null and not-empty.
+	 * 
+	 * @param inputAddressLine3		
+	 * @return	Validity of Address Line-3
+	 */
+	public static boolean isValidAddressLine3(String inputAddressLine3)
+	{
+		if(isValidNonEmptyString(inputAddressLine3))
+			return true;
+			
+		return false;
+	}
+	
+	/**
+	 * Method to check if the country code is valid or not.
+	 * 
+	 * @param inputCountryCode	Country code in question
+	 * @return					Validity of the country code
+	 */
 	public static boolean isValidCountryCode(String inputCountryCode)
 	{
 		if(isValidNonEmptyString(inputCountryCode))
@@ -99,6 +140,12 @@ public class AppUtils
 		return false;
 	}
 	
+	/**
+	 * Method to check if the string is non-null and not empty.
+	 * 
+	 * @param inputStr		Input String
+	 * @return				result if valid or not
+	 */
 	public static boolean isValidNonEmptyString(String inputStr)
 	{
 		if(inputStr != null && !inputStr.equals(""))
@@ -107,11 +154,18 @@ public class AppUtils
 		return false;
 	}
 	
+	/**
+	 * Method to print the addresses on logcat.
+	 * 
+	 * @param addresses		List of addresses to print
+	 * @param tag			TAG String
+	 * @param inDetail		Print in detail?
+	 */
 	public static void printAddresses(List<Address> addresses, String tag, boolean inDetail)
 	{
 		String strCompAdd = null;
 		
-//		if(AppConstants.SHOW_LOGS)
+//		if(AppConstants.SHOW_LOGS)	// TODO: Remove the comment.
 		{
 			for(Address fullAddress : addresses)
 			{
