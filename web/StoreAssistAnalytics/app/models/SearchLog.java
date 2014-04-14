@@ -1,19 +1,24 @@
 package models;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 import play.db.ebean.Model;
-
 /**
  * Represents a search log for an item in the stores database.
  * @author excelsior
  *
  */
 @Entity
-public class SearchLog {
+@Table(name="search_log_new")
+public class SearchLog extends Model {
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	public Long id;
 	
@@ -37,6 +42,12 @@ public class SearchLog {
 	 */
 	public static Map<String, Double> findTopNSearchItems(int numItemsToSearch)
 	{
-		
+		// TODO
+		return null;
+	}
+	
+	public static List<SearchLog> getAllSearchLogs()
+	{
+		return find.all();
 	}
 }
