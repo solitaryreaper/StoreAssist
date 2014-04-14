@@ -3,6 +3,7 @@ package com.storeassist;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.storeassist.model.ItemLocation;
@@ -51,14 +52,35 @@ public class ItemLocationActivity extends Activity
 		TextView startLabelTextView = (TextView) findViewById(R.id.text_start_label);
 		startLabelTextView.setText("You can find " + "item " + "at following " + locationString);
 		
+		// Displaying the Location now
+		
 		TextView sectionValueTextView = (TextView) findViewById(R.id.text_section_value);
-		sectionValueTextView.setText(mItemLocationArray[0].getSection());
+		TextView sectionTextView = (TextView) findViewById(R.id.text_section);
+		displayItemLocationRow(mItemLocationArray[0].getSection(), sectionTextView, sectionValueTextView);
 		
 		TextView aisleValueTextView = (TextView) findViewById(R.id.text_aisle_value);
-		aisleValueTextView.setText(mItemLocationArray[0].getAisle());
-		
+		TextView aisleTextView = (TextView) findViewById(R.id.text_aisle);
+		displayItemLocationRow(mItemLocationArray[0].getAisle(), aisleTextView, aisleValueTextView);
+
 		TextView shelfValueTextView = (TextView) findViewById(R.id.text_shelf_value);
-		shelfValueTextView.setText(mItemLocationArray[0].getShelf());
-		
+		TextView shelfTextView = (TextView) findViewById(R.id.text_shelf);
+		displayItemLocationRow(mItemLocationArray[0].getShelf(), shelfTextView, shelfValueTextView);
+
 	}
+	
+	private void displayItemLocationRow(String itemLocationValue, TextView itemLocationTextView, TextView itemLocationValueTextView)
+	{
+		if(itemLocationValue != null && !itemLocationValue.equals(""))
+		{
+			itemLocationTextView.setVisibility(View.VISIBLE);
+			itemLocationValueTextView.setVisibility(View.VISIBLE);
+			itemLocationValueTextView.setText(itemLocationValue);
+		}
+		else
+		{
+			itemLocationTextView.setVisibility(View.GONE);
+			itemLocationValueTextView.setVisibility(View.GONE);
+		}
+	}
+	
 }

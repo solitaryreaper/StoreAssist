@@ -114,9 +114,14 @@ public class DownloadDataTask extends AsyncTask<Void, Void, String>
 				{
 					JSONObject itemLocationObject = itemJSONArray.getJSONObject(0);
 					
-					String sectionVal = itemLocationObject.getString(AppConstants.JSONTAG_SECTION);
-					String aisleVal = itemLocationObject.getString(AppConstants.JSONTAG_AISLE);
-					String shelfVal = itemLocationObject.getString(AppConstants.JSONTAG_SHELF);
+					String shelfVal = null, sectionVal = null, aisleVal = null;
+							
+					if(itemLocationObject.has(AppConstants.JSONTAG_SECTION))
+						sectionVal = itemLocationObject.getString(AppConstants.JSONTAG_SECTION);
+					if(itemLocationObject.has(AppConstants.JSONTAG_AISLE))
+						aisleVal = itemLocationObject.getString(AppConstants.JSONTAG_AISLE);
+					if(itemLocationObject.has(AppConstants.JSONTAG_SHELF))
+						shelfVal = itemLocationObject.getString(AppConstants.JSONTAG_SHELF);
 					
 					ItemLocation itemLocation = new ItemLocation(sectionVal, aisleVal, shelfVal);
 					itemLocationArray[i] = itemLocation;

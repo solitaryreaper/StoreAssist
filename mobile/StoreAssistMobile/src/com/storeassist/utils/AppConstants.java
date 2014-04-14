@@ -17,10 +17,13 @@ public class AppConstants
 	public static final String ITEM_LOCATION_SERVER_PORT = "9000";
 	
 	// Web APIs
-	public static final String WEBAPI_SEARCH_ITEM = "searchItem";
+	public static final String WEBAPI_SEARCH_ITEM = "searchItem";						// http://107.170.62.160:9000/api/searchItem?storeId=1&item=vegetable
+	public static final String WEBAPI_SEARCH_STORE_BY_ZIP = "searchStoreByZip";			// http://107.170.62.160:9000/api/searchStoreByZip?zip=53715
+	public static final String WEBAPI_SEARCH_STORE_BY_ADDRESS = "searchStoreByAddress";	// http://107.170.62.160:9000/api/searchStoreByAddress?address=703%20university%20avenue 
+	public static final String WEBAPI_GET_SIMILAR_ITEM_NAMES= "getItemNameProposals";	// http://107.170.62.160:9000/api/getItemNameProposals?itemRegex=vegetable&storeId=1
 	
 	// URL Tags
-	public static final String URLTAG_STORE_IDENTIFIER = "storeIdentifier";
+	public static final String URLTAG_STORE_IDENTIFIER = "storeId";
 	public static final String URLTAG_ITEM = "item";
 	
 	// RESPONSE JSON TAGS
