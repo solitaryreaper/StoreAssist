@@ -12,6 +12,7 @@ import models.ItemLocation;
 import models.Store;
 import models.StoreSearchMetadata;
 import models.utils.DBUtils;
+import models.utils.SearchLogger;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -26,53 +27,44 @@ public class SearchServiceImpl implements SearchService {
 	private static Logger LOG = Logger.getLogger(SearchService.class.getSimpleName());
 
 	@Override
-	public Map<String, List<ItemLocation>> searchItemsLocations(int storeId, List<String> items)
+	public Map<String, List<ItemLocation>> searchItemsLocations(int storeId, List<String> items, boolean isExactMatchReqd)
 	{
 		Map<String, List<ItemLocation>> itemsLocations = Maps.newHashMap();
 		for(String item : items) {
-			itemsLocations.put(item, searchItemLocations(storeId, item));
+			itemsLocations.put(item, searchItemLocations(storeId, item, isExactMatchReqd));
 		}
 		
 		return itemsLocations;
 	}
 
 	@Override
-	public List<ItemLocation> searchItemLocations(int storeId, String item)
+	public List<ItemLocation> searchItemLocations(int storeId, String item, boolean isExactMatchReqd)
 	{
 		List<ItemLocation> locations = Lists.newArrayList();
 		
-		String sql = 
-				" SELECT item.name AS name, item.section AS section, item.aisle AS aisle" +
-				" FROM " + Constants.DB_ITEM_TABLE + " item" +
-				" JOIN " + Constants.DB_STORE_TABLE + " store on (item.store_id = store.id)" +
-				" WHERE LOWER(item.name) LIKE '%" + item.toLowerCase() + "%'" + 
-				" AND store.id = " + storeId;
-		/*
-		String sql = 
-				" select item.name AS name, item_location.location_id AS id, section.name AS section, aisle_shelf.aisle_name AS aisle, aisle_shelf.shelf_name AS shelf " +
-				" from item_info item" +
-				" join store store on (item.store_id = store.id)" +
-				" join item_location item_location on(item.item_id = item_location.item_id)" +
-				" join location location on (item_location.location_id = location.id)" +
-				" join section section on (location.section_id = section.id)" +
-				" join aisle_shelf aisle_shelf on (aisle_shelf.id = location.aisle_shelf_id)" +
-				" where LOWER(item.name) like '%" + item.toLowerCase() + "%'" + 
-				" and store.id = " + storeId;
-		*/
+		StringBuilder itemLocatorSQL = new StringBuilder();
+		itemLocatorSQL.append(" SELECT item.name AS name, item.section AS section, item.aisle AS aisle");
+		itemLocatorSQL.append(" FROM " + Constants.DB_ITEM_TABLE + " item");
+		itemLocatorSQL.append(" JOIN " + Constants.DB_STORE_TABLE + " store on (item.store_id = store.id)");
+		itemLocatorSQL.append(" WHERE store.id = " + storeId);
+		if(isExactMatchReqd) {
+			itemLocatorSQL.append(" AND LOWER(item.name) = '" + item.toLowerCase() + "'");
+		}
+		else {
+			itemLocatorSQL.append(" AND LOWER(item.name) LIKE '%" + item.toLowerCase() + "%'");
+		}
 		
-		LOG.severe("SQL : " + sql);
+		LOG.info("SQL : " + itemLocatorSQL.toString());
 		
 		Connection dbConn = DBUtils.getDBConnection();
 		PreparedStatement prepStmt = null;
 		
 		try {
-			prepStmt = dbConn.prepareStatement(sql);
+			prepStmt = dbConn.prepareStatement(itemLocatorSQL.toString());
 			ResultSet rs = prepStmt.executeQuery();
 			while(rs.next()) {
 				String section = rs.getString("section");
 				String aisle = rs.getString("aisle");
-				//String shelf = rs.getString("shelf");
-				//long locationId = rs.getLong("id");
 				
 				locations.add(new ItemLocation(section, aisle));
 			}
@@ -81,6 +73,10 @@ public class SearchServiceImpl implements SearchService {
 			LOG.severe("Failed to get locations. Reason : " + e.getMessage());
 			e.printStackTrace();
 		}
+		
+		SearchLogger.insertSearchQuery(item, storeId);
+		
+		DBUtils.cleanDBResources(prepStmt);
 		
 		return locations;
 	}
@@ -110,6 +106,10 @@ public class SearchServiceImpl implements SearchService {
 		
 		// TODO : show only a subset of most relevant items. Need to come up with a simple ranking
 		// function for the same.
+		
+		DBUtils.closeDBConnection(dbConn);
+		DBUtils.cleanDBResources(prepStmt);
+		
 		return items;
 	}
 	
@@ -146,7 +146,7 @@ public class SearchServiceImpl implements SearchService {
 			sql.append(" OR city = '").append(searchCity).append("'");
 		}
 		
-		LOG.severe("SQL : " + sql);
+		LOG.info("SQL : " + sql);
 		
 		List<Store> stores = Lists.newArrayList();
 		Connection dbConn = DBUtils.getDBConnection();
@@ -169,6 +169,9 @@ public class SearchServiceImpl implements SearchService {
 			e.printStackTrace();
 		}
 
+		DBUtils.closeDBConnection(dbConn);
+		DBUtils.cleanDBResources(prepStmt);
+		
 		return stores;
 	}
 }

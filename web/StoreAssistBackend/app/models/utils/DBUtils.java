@@ -64,5 +64,13 @@ public class DBUtils {
 			e.printStackTrace();
 		}
 	}
+	
+	public static void cleanDBResources(PreparedStatement prepStmt) {
+		try {
+			prepStmt.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 
 }
