@@ -42,6 +42,13 @@ public class SearchServiceImpl implements SearchService {
 		List<ItemLocation> locations = Lists.newArrayList();
 		
 		String sql = 
+				" SELECT item.name AS name, item.section AS section, item.aisle AS aisle" +
+				" FROM " + Constants.DB_ITEM_TABLE + " item" +
+				" JOIN " + Constants.DB_STORE_TABLE + " store on (item.store_id = store.id)" +
+				" WHERE LOWER(item.name) LIKE '%" + item.toLowerCase() + "%'" + 
+				" AND store.id = " + storeId;
+		/*
+		String sql = 
 				" select item.name AS name, item_location.location_id AS id, section.name AS section, aisle_shelf.aisle_name AS aisle, aisle_shelf.shelf_name AS shelf " +
 				" from item_info item" +
 				" join store store on (item.store_id = store.id)" +
@@ -51,8 +58,9 @@ public class SearchServiceImpl implements SearchService {
 				" join aisle_shelf aisle_shelf on (aisle_shelf.id = location.aisle_shelf_id)" +
 				" where LOWER(item.name) like '%" + item.toLowerCase() + "%'" + 
 				" and store.id = " + storeId;
+		*/
 		
-		LOG.info("SQL : " + sql);
+		LOG.severe("SQL : " + sql);
 		
 		Connection dbConn = DBUtils.getDBConnection();
 		PreparedStatement prepStmt = null;
@@ -63,10 +71,10 @@ public class SearchServiceImpl implements SearchService {
 			while(rs.next()) {
 				String section = rs.getString("section");
 				String aisle = rs.getString("aisle");
-				String shelf = rs.getString("shelf");
-				long locationId = rs.getLong("id");
+				//String shelf = rs.getString("shelf");
+				//long locationId = rs.getLong("id");
 				
-				locations.add(new ItemLocation(locationId, section, aisle, shelf));
+				locations.add(new ItemLocation(section, aisle));
 			}
 		}
 		catch(Exception e) {
@@ -115,20 +123,20 @@ public class SearchServiceImpl implements SearchService {
 		String searchCity = storeMeta.getCity();
 		
 		StringBuilder sql = new StringBuilder(); 
-		sql.append("SELECT id, name, address, zip, city, state FROM store WHERE 1=0 OR ");
+		sql.append("SELECT id, name, address, zip, city, state FROM " + Constants.DB_STORE_TABLE + " WHERE 1=0 ");
 
 		/**
 		 * If store id or name is specified, they can uniquely identify a store.
 		 * Else, base the search results on remaining parameters.
 		 */
 		if(searchStoreId != null) {
-			sql.append(" id = ").append(searchStoreId);
+			sql.append(" OR id = ").append(searchStoreId);
 		}
 		else if(searchName != null) {
-			sql.append(" LOWER(name) LIKE '%").append(searchName.toLowerCase()).append("%'");
+			sql.append(" OR LOWER(name) LIKE '%").append(searchName.toLowerCase()).append("%'");
 		}
 		else if(searchAddress != null) {
-			sql.append(" LOWER(address) LIKE '%").append(searchAddress.toLowerCase()).append("%'");
+			sql.append(" OR LOWER(address) LIKE '%").append(searchAddress.toLowerCase()).append("%'");
 		}
 		
 		if(searchZip != null) {
@@ -138,7 +146,7 @@ public class SearchServiceImpl implements SearchService {
 			sql.append(" OR city = '").append(searchCity).append("'");
 		}
 		
-		LOG.info("SQL : " + sql);
+		LOG.severe("SQL : " + sql);
 		
 		List<Store> stores = Lists.newArrayList();
 		Connection dbConn = DBUtils.getDBConnection();

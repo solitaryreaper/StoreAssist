@@ -7,35 +7,33 @@ package models;
  *
  */
 public class ItemLocation {
-	private long id;
+	//private Long id = null;
 	private String section = null;
 	private String aisle = null;
-	private String shelf = null;
+	//private String shelf = null;
 	
 	public ItemLocation(long id, String section, String aisle, String shelf) {
 		super();
-		this.id = id;
+		//this.id = id;
 		this.section = section;
 		this.aisle = aisle;
-		this.shelf = shelf;
+		//this.shelf = shelf;
 	}
 	
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("ItemLocation [id=").append(id).append(", section=")
-				.append(section).append(", aisle=").append(aisle)
-				.append(", shelf=").append(shelf).append("]");
-		return builder.toString();
+	public ItemLocation(String section, String aisle)
+	{
+		this.section = section;
+		this.aisle = aisle;
 	}
 
-
+/*
 	public long getId() {
 		return id;
 	}
 	public void setId(long id) {
 		this.id = id;
 	}
+	*/
 	public String getSection() {
 		return section;
 	}
@@ -48,11 +46,13 @@ public class ItemLocation {
 	public void setAisle(String aisle) {
 		this.aisle = aisle;
 	}
+	/*
 	public String getShelf() {
 		return shelf;
 	}
 	public void setShelf(String shelf) {
 		this.shelf = shelf;
 	}
+	*/
 	
 }

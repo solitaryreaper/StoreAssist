@@ -56,6 +56,21 @@ public class SearchController extends Controller {
 	}
 	
 	/**
+	 * Returns list of possible item name auto-completion proposals.
+	 * 
+	 * @param itemNameRegex
+	 * @param storeId
+	 * @return
+	 * 
+	 * TODO : Add ranking function for results and only retain 4 results.
+	 */
+	public static Result getItemNameAutoCompletions(String itemNameRegex, int storeId)
+	{
+		List<String> itemNameProposals = searchService.searchItemsByName(itemNameRegex, storeId);
+		return ok(Json.toJson(itemNameProposals));
+	}
+	
+	/**
 	 * Returns list of stores in a zip code.
 	 */
 	public static Result searchStoresByZipCode(int zipCode)
@@ -78,4 +93,5 @@ public class SearchController extends Controller {
 		List<Store> stores = searchService.searchStore(searchMeta);
 		return ok(Json.toJson(stores));
 	}
+	
 }

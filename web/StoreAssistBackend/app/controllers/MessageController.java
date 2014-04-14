@@ -108,7 +108,7 @@ public class MessageController extends Controller {
 				output.append("(");
 				output.append(location.getSection()).append(",");
 				output.append(location.getAisle()).append(",");
-				output.append(location.getShelf());
+				//output.append(location.getShelf());
 				output.append(") , ");
 			}
 			output.append("}");
