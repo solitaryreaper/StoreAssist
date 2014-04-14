@@ -3,11 +3,15 @@ package com.storeassist;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.TextView.OnEditorActionListener;
 import com.storeassist.model.ItemLocation;
 import com.storeassist.model.ItemLocationQuery;
 import com.storeassist.utils.AppConstants;
@@ -36,6 +40,19 @@ public class MainActivity extends Activity
 	
 	private void setUI()
 	{
+		EditText itemNameEditText = (EditText) findViewById(R.id.edittext_item);
+		itemNameEditText.setOnEditorActionListener(new OnEditorActionListener()
+		{
+			public boolean onEditorAction(TextView v, int actionId, KeyEvent event)
+			{
+				if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER))
+						|| (actionId == EditorInfo.IME_ACTION_DONE))
+				{
+					locateItem();
+				}
+				return false;
+			}
+		});
 		
 		if(AppConstants.DEMO_BUILD)
 		{
@@ -95,18 +112,25 @@ public class MainActivity extends Activity
 	 * Method to locate an item mentioned by the user in the EditText.
 	 */
 	private void locateItem()
+	{ locateItem(((EditText) findViewById(R.id.edittext_item)).getText().toString()); }
+	
+	private void locateItem(String itemName)
 	{
+		if(itemName == null || itemName.equals(""))
+		{
+			displayErrorText(AppConstants.ERROR_ITEM_INVALID);
+			return;
+		}
+			
 		// TODO: Validate the item string 
-		String itemName = ((EditText) findViewById(R.id.edittext_item)).getText().toString();
 		
-		ItemLocationQuery itemLocationQuery = new ItemLocationQuery("Madison", itemName);
+		ItemLocationQuery itemLocationQuery = new ItemLocationQuery("1", itemName);	// "1" for Madison
 		
 //		// Generate URL
 //		String url = "http://" + AppConstants.ITEM_LOCATION_SERVER_IP + ":" + AppConstants.ITEM_LOCATION_SERVER_PORT + "/" +
 //					"api/" + AppConstants.WEBAPI_SEARCH_ITEM + 
 //					"?" + AppConstants.URLTAG_STORE_IDENTIFIER + "=Madison" +
 //					"&" + AppConstants.URLTAG_ITEM + "=" + itemName;
-		
 		
 		// Example: "http://107.170.62.160:9000/api/searchItem?storeIdentifier=Madison&item=Pickle"
 //		String[] urls = new String[] {url};

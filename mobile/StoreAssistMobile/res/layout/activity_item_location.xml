@@ -15,6 +15,7 @@
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:layout_alignParentTop="true"
+        	android:layout_marginTop="@dimen/inner_margin_top"
 	        android:textSize="@dimen/edittext_font_size" />
     
     <!-- BLOCK: SECTION -->
@@ -24,9 +25,10 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/text_start_label"
+        android:layout_marginTop="@dimen/inner_margin_top"
         android:paddingLeft="@dimen/activity_padding_horizontal"
         android:paddingRight="@dimen/activity_padding_horizontal"
-        android:background="@color/red" >
+        android:background="@color/default_background_color" >
     
 	    <TextView
 	        android:id="@+id/text_section"
@@ -56,7 +58,7 @@
         android:layout_below="@id/block_section"
         android:paddingLeft="@dimen/activity_padding_horizontal"
         android:paddingRight="@dimen/activity_padding_horizontal"
-        android:background="@color/red" >
+        android:background="@color/default_background_color" >
     
 	    <TextView
 	        android:id="@+id/text_aisle"
@@ -86,14 +88,14 @@
         android:layout_below="@id/block_aisle"
         android:paddingLeft="@dimen/activity_padding_horizontal"
         android:paddingRight="@dimen/activity_padding_horizontal"
-        android:background="@color/red" >
+        android:background="@color/default_background_color" >
     
 	    <TextView
 	        android:id="@+id/text_shelf"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:layout_alignParentLeft="true"
-	        android:text="Aisle:"
+	        android:text="Shelf"
 	        android:textSize="@dimen/edittext_font_size" />
 	    
 	     <TextView
