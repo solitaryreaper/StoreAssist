@@ -9,9 +9,11 @@ import java.util.Map;
 
 import models.Constants;
 import models.SearchFilter;
+import models.SearchFilter.AggregativeLevel;
 import models.utils.DBUtils;
 import play.Logger;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 /**
@@ -30,7 +32,7 @@ public class ReportingService {
 	 * Results is always a percentage wise split of each item's search history in the
 	 * specified time range.
 	 */
-	public Map<String, Double> fetchSearchSummaryReport(int numResults, SearchFilter filter)
+	public Map<String, Double> fetchOverallSearchSummaryReport(int numResults, SearchFilter filter)
 	{
 		Date startTime = filter.getStartTime();
 		Date endTime = filter.getEndTime();
@@ -78,6 +80,80 @@ public class ReportingService {
 		return itemSearchSummary;
 	}
 
+	public Map<String, Integer> getItemBasedSearchSummaryReport(String item, SearchFilter filter)
+	{
+		filter.setItems(Lists.newArrayList(item));
+		return getTimeBasedSearchSummaryReport(filter);
+	}
+	
+	public Map<String, Integer> getTimeBasedSearchSummaryReport(SearchFilter filter)
+	{
+		String commonSQL = getQueryCommonSQL(filter);
+		
+		StringBuilder searchSQL = new StringBuilder();
+		if(filter.getSummaryLevel().equals(AggregativeLevel.TIME_HOUR)) {
+			searchSQL.append(" SELECT HOUR(search_time) AS time_token, COUNT(1) AS cnt");
+		}
+		else if(filter.getSummaryLevel().equals(AggregativeLevel.TIME_DAY)) {
+			searchSQL.append(" SELECT DAYOFMONTH(search_time) AS time_token, COUNT(1) AS cnt");
+		}
+		else if(filter.getSummaryLevel().equals(AggregativeLevel.TIME_YEAR_MONTH)) {
+			searchSQL.append(" SELECT MONTH(search_time) AS time_token, COUNT(1) AS cnt");
+		}
+		
+		searchSQL.append(commonSQL);
+		searchSQL.append(" GROUP BY time_token");
+		searchSQL.append(" ORDER BY time_token");
+		
+		Logger.error("SQL : " + searchSQL.toString());
+		
+		Connection dbConn = DBUtils.getDBConnection();
+		PreparedStatement prepStmt = null;
+		
+		Map<String, Integer> timeBasedSearchSummary = Maps.newHashMap();
+		try {
+			prepStmt = dbConn.prepareStatement(searchSQL.toString());
+
+			ResultSet rs = prepStmt.executeQuery();
+			while(rs.next()) {
+				String searchItem = rs.getString("time_token");
+				int count = rs.getInt("cnt");
+
+				timeBasedSearchSummary.put(searchItem, count);
+			}
+		}
+		catch(Exception e) {
+			Logger.error("Failed to get time-based search summary results. Reason : " + e.getMessage());
+			e.printStackTrace();
+		}		
+		
+		DBUtils.closeDBConnection(dbConn);
+		DBUtils.cleanDBResources(dbConn, prepStmt);
+
+		return timeBasedSearchSummary;		
+	}
+	
+	private String getQueryCommonSQL(SearchFilter filter)
+	{
+		Date startTime = filter.getStartTime();
+		Date endTime = filter.getEndTime();
+		
+		StringBuilder searchSQL = new StringBuilder();
+		
+		searchSQL.append(" FROM ").append(Constants.DB_LOG_TABLE);
+		searchSQL.append(" WHERE search_time >= '" + formatter.format(startTime) + "'");
+		searchSQL.append(" AND search_time < '" + formatter.format(endTime) + "'");
+		if(filter.getItems() != null) {
+			searchSQL.append(" AND LOWER(item_search_string) IN (");
+			for(String item : filter.getItems()) {
+				searchSQL.append("'" + item.toLowerCase() + "'");
+			}
+			searchSQL.append(" )");
+		}
+		
+		return searchSQL.toString();
+	}
+	
 	/**
 	 * Get the total number of log entries in database
 	 */

@@ -66,6 +66,14 @@
 				console.log("Loading overall search report ..");
 				loadOverallSummaryChart(startTime, endTime);
 			}
+			else if (reportType == "item_search") {
+                console.log("Loading item search summary report ..");
+                loadItemSearchSummaryReport(startTime, endTime);
+			}
+			else {
+                console.log("Loading time-based search summary report ..");
+                loadTimeBasedSearchSummaryReport(startTime, endTime);
+			}
 		});
 		
 		// function to generate the overall summary pie chart
@@ -100,6 +108,101 @@
             
             var chart = new Highcharts.Chart(options);
 		}
+		
+		// function to generate item-based search summary report
+		function loadItemSearchSummaryReport(startTime, endTime)
+		{
+			console.log("Item search summary report ..");
+			
+			var timeTokens = [];
+			var searchFrequencies = [];
+            $.ajax({
+                type: 'GET',
+                async: false,
+                url: 'http://localhost:9000/report?reportType=item_search&=startTime=' + startTime + '&endTime=' + endTime,
+                dataType: 'json',
+                success: function(data, textStatus, xhr) {
+                    $.each(data, function (time_token, frequency) {
+                    	timeTokens.push(time_token);
+                    	searchFrequencies.push(frequency);
+                    });
+                }
+            });
+            
+            console.log(searchFrequencies);
+            console.log(timeTokens);
+            
+            var options = getDefaultLineChartOptions();
+            options.chart.renderTo = "report_chart";
+            options.series[0].data = searchFrequencies;
+            options.series[0].type = 'line';
+            options.series[0].name = 'Item Search History';
+            
+            options.title.text = 'Item Search Summary Report';
+            options.subtitle.text = 'Time : (' + startTime + ',' + endTime + ')';
+            
+            options.xAxis.title.text = 'Time';
+            options.xAxis.categories = timeTokens;
+            options.yAxis.title.text = 'Number of searches';
+
+            options.tooltip.formatter = function() {
+                return '<b>Time:</b> '+ this.x +
+                    ', <b>Searches:</b> '+ this.y;
+            }
+            
+            options.title.text = 'Item Search Summary Report';
+            options.subtitle.text = 'Time : (' + startTime + ',' + endTime + ')';
+            
+			var chart = new Highcharts.Chart(options);
+		}
+		
+		// function to generate time-based item search summary report
+		function loadTimeBasedSearchSummaryReport(startTime, endTime)
+		{
+            console.log("Item search summary report ..");
+            
+            var timeTokens = [];
+            var searchFrequencies = [];
+            $.ajax({
+                type: 'GET',
+                async: false,
+                url: 'http://localhost:9000/report?reportType=time_search&=startTime=' + startTime + '&endTime=' + endTime,
+                dataType: 'json',
+                success: function(data, textStatus, xhr) {
+                    $.each(data, function (time_token, frequency) {
+                        timeTokens.push(time_token);
+                        searchFrequencies.push(frequency);
+                    });
+                }
+            });
+            
+            console.log(searchFrequencies);
+            console.log(timeTokens);
+            
+            var options = getDefaultLineChartOptions();
+            options.chart.renderTo = "report_chart";
+            options.series[0].data = searchFrequencies;
+            options.series[0].type = 'column';
+            options.series[0].name = 'Time-Based Search History';
+            
+            options.title.text = 'Time-Based Search Summary Report';
+            options.subtitle.text = 'Time : (' + startTime + ',' + endTime + ')';
+            
+            options.xAxis.title.text = 'Time';
+            options.xAxis.categories = timeTokens;
+            options.yAxis.title.text = 'Number of searches';
+
+            options.tooltip.formatter = function() {
+                return '<b>Time:</b> '+ this.x +
+                    ', <b>Searches:</b> '+ this.y;
+            }
+            
+            options.title.text = 'Time-Based Search Summary Report';
+            options.subtitle.text = 'Time : (' + startTime + ',' + endTime + ')';
+            
+            var chart = new Highcharts.Chart(options);			
+		}
+		
 	});
 	</script>
 </body>

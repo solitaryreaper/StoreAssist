@@ -6,6 +6,7 @@ import java.util.Map;
 import models.Constants;
 import models.ReportType;
 import models.SearchFilter;
+import models.SearchFilter.AggregativeLevel;
 import models.service.ReportingService;
 
 import org.apache.commons.lang3.time.DateUtils;
@@ -35,9 +36,16 @@ public class ReportingController extends Controller {
     	
     	SearchFilter filter = getSearchFilter(reportType, startTime, endTime);
     	
+    	String item = "";
     	Result result = null;
     	if(filter.getReportType().equals(ReportType.SEARCH_SUMMARY_REPORT)) {
     		result = generateOverallSummaryReport(filter);
+    	}
+    	else if(filter.getReportType().equals(ReportType.SEARCH_BY_ITEM_REPORT)) {
+    		result = getItemSearchSummaryReport(item, filter);
+    	}
+    	else if(filter.getReportType().equals(ReportType.SEARCH_BY_TIME_REPORT)) {
+    		result = getTimeBasedSearchSummaryReport(filter);
     	}
     	
     	Logger.info("Results : " + result.toString());
@@ -47,9 +55,27 @@ public class ReportingController extends Controller {
     
     private static Result generateOverallSummaryReport(SearchFilter filter)
     {
-    	int numResults = Constants.NUM_SEARCH_SUMMARY_RESULTS;
-    	Map<String, Double> summaryReport = reportService.fetchSearchSummaryReport(numResults, filter);
+    	filter.setSummaryLevel(AggregativeLevel.ITEM);
     	
+    	int numResults = Constants.NUM_SEARCH_SUMMARY_RESULTS;
+    	Map<String, Double> summaryReport = reportService.fetchOverallSearchSummaryReport(numResults, filter);
+    	
+    	return ok(Json.toJson(summaryReport));
+    }
+    
+    private static Result getItemSearchSummaryReport(String item, SearchFilter filter)
+    {
+    	filter.setSummaryLevel(AggregativeLevel.TIME_DAY);
+    	
+    	Map<String, Integer> summaryReport = reportService.getItemBasedSearchSummaryReport("Avocados", filter);
+    	return ok(Json.toJson(summaryReport));
+    }
+    
+    private static Result getTimeBasedSearchSummaryReport(SearchFilter filter)
+    {
+    	filter.setSummaryLevel(AggregativeLevel.TIME_DAY);
+    	
+    	Map<String, Integer> summaryReport = reportService.getTimeBasedSearchSummaryReport(filter);
     	return ok(Json.toJson(summaryReport));
     }
     
