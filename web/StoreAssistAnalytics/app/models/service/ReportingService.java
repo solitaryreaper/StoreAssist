@@ -32,7 +32,7 @@ public class ReportingService {
 	 * Results is always a percentage wise split of each item's search history in the
 	 * specified time range.
 	 */
-	public Map<String, Double> fetchOverallSearchSummaryReport(int numResults, SearchFilter filter)
+	public Map<String, Double> getOverallItemSearchSummaryReport(int numResults, SearchFilter filter)
 	{
 		Date startTime = filter.getStartTime();
 		Date endTime = filter.getEndTime();
@@ -80,6 +80,61 @@ public class ReportingService {
 		return itemSearchSummary;
 	}
 
+	/**
+	 * Retrieves the summary report for all the categories searched within a time range.
+	 * 
+	 * Results is always a percentage wise split of each category's search history in the
+	 * specified time range.
+	 */
+	public Map<String, Double> getOverallCategorySearchSummaryReport(int numResults, SearchFilter filter)
+	{
+		Date startTime = filter.getStartTime();
+		Date endTime = filter.getEndTime();
+		
+		StringBuilder searchSQL = new StringBuilder();
+		searchSQL.append(" SELECT item.section AS category, COUNT(1) AS cnt");
+		searchSQL.append(" FROM ").append(Constants.DB_LOG_TABLE).append(" log");
+		searchSQL.append(" LEFT OUTER JOIN ").append(Constants.DB_ITEM_TABLE).append(" item ON (item.name = log.item_search_string)");
+		searchSQL.append(" WHERE log.search_time >= '" + formatter.format(startTime) + "'");
+		searchSQL.append(" AND log.search_time < '" + formatter.format(endTime) + "'");
+		searchSQL.append(" GROUP BY log.item_search_string");
+		searchSQL.append(" ORDER BY cnt DESC");
+		searchSQL.append(" LIMIT " + numResults);
+		
+		Logger.error("SQL : " + searchSQL.toString());
+		
+		Connection dbConn = DBUtils.getDBConnection();
+		PreparedStatement prepStmt = null;
+		
+		Map<String, Double> itemSearchSummary = Maps.newHashMap();
+		try {
+			prepStmt = dbConn.prepareStatement(searchSQL.toString());
+			
+			int totalLogs = getTotalLogs();
+			ResultSet rs = prepStmt.executeQuery();
+			double cumulativePercent = 0.0;
+			while(rs.next()) {
+				String searchItem = rs.getString("category");
+				int count = rs.getInt("cnt");
+				
+				double searchPercentage = (count*100)/(double)totalLogs;
+				cumulativePercent += searchPercentage;
+				itemSearchSummary.put(searchItem, searchPercentage);
+			}
+			
+			itemSearchSummary.put(Constants.REMAINING_ITEMS, 100 - cumulativePercent);
+		}
+		catch(Exception e) {
+			Logger.error("Failed to get category search summary results. Reason : " + e.getMessage());
+			e.printStackTrace();
+		}		
+		
+		DBUtils.closeDBConnection(dbConn);
+		DBUtils.cleanDBResources(dbConn, prepStmt);
+
+		return itemSearchSummary;
+	}
+	
 	public Map<String, Integer> getItemBasedSearchSummaryReport(String item, SearchFilter filter)
 	{
 		filter.setItems(Lists.newArrayList(item));

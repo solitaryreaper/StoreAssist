@@ -8,7 +8,8 @@ package models;
  */
 public enum ReportType {
 	// Summary of the overall nature (topN) of search queries over a period of time
-	SEARCH_SUMMARY_REPORT("overall_search"),
+	OVERALL_ITEM_SEARCH_SUMMARY_REPORT("overall_item_search"),
+	OVERALL_CATEGORY_SEARCH_SUMMARY_REPORT("overall_category_search"),
 	
 	// Search history for a particular item over a period of time
 	SEARCH_BY_ITEM_REPORT("item_search"),

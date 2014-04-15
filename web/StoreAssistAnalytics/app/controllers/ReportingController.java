@@ -22,7 +22,7 @@ public class ReportingController extends Controller {
 	private static ReportingService reportService = new ReportingService();
 	
     public static Result index() {
-        return ok(main.render());
+        return ok(main.render("Fresh Madison Market"));
     }
     
     /**
@@ -38,8 +38,11 @@ public class ReportingController extends Controller {
     	
     	String item = "";
     	Result result = null;
-    	if(filter.getReportType().equals(ReportType.SEARCH_SUMMARY_REPORT)) {
-    		result = generateOverallSummaryReport(filter);
+    	if(filter.getReportType().equals(ReportType.OVERALL_ITEM_SEARCH_SUMMARY_REPORT)) {
+    		result = generateOverallItemSearchSummaryReport(filter);
+    	}
+    	else if(filter.getReportType().equals(ReportType.OVERALL_CATEGORY_SEARCH_SUMMARY_REPORT)) {
+    		result = generateOverallCategorySearchSummaryReport(filter);
     	}
     	else if(filter.getReportType().equals(ReportType.SEARCH_BY_ITEM_REPORT)) {
     		result = getItemSearchSummaryReport(item, filter);
@@ -53,15 +56,25 @@ public class ReportingController extends Controller {
     	
     }
     
-    private static Result generateOverallSummaryReport(SearchFilter filter)
+    private static Result generateOverallItemSearchSummaryReport(SearchFilter filter)
     {
     	filter.setSummaryLevel(AggregativeLevel.ITEM);
     	
     	int numResults = Constants.NUM_SEARCH_SUMMARY_RESULTS;
-    	Map<String, Double> summaryReport = reportService.fetchOverallSearchSummaryReport(numResults, filter);
+    	Map<String, Double> summaryReport = reportService.getOverallItemSearchSummaryReport(numResults, filter);
     	
     	return ok(Json.toJson(summaryReport));
     }
+    
+    private static Result generateOverallCategorySearchSummaryReport(SearchFilter filter)
+    {
+    	filter.setSummaryLevel(AggregativeLevel.ITEM);
+    	
+    	int numResults = Constants.NUM_SEARCH_SUMMARY_RESULTS;
+    	Map<String, Double> summaryReport = reportService.getOverallCategorySearchSummaryReport(numResults, filter);
+    	
+    	return ok(Json.toJson(summaryReport));
+    }    
     
     private static Result getItemSearchSummaryReport(String item, SearchFilter filter)
     {

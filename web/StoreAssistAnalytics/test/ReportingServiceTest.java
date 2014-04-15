@@ -33,7 +33,7 @@ public class ReportingServiceTest {
 				}
 				filter.setEndTime(new Date());
 				
-				Map<String, Double> itemSearchSummary = reportService.fetchOverallSearchSummaryReport(5, filter);
+				Map<String, Double> itemSearchSummary = reportService.getOverallItemSearchSummaryReport(5, filter);
 				Logger.debug(itemSearchSummary.toString());
 				assertThat(itemSearchSummary.size()).isGreaterThan(0);
 			}
@@ -41,6 +41,26 @@ public class ReportingServiceTest {
 	}	
 	
 	@Test
+	public void testCategorySearchSummaryReport() {
+		running(fakeApplication(), new Runnable() {
+			public void run() {
+				SearchFilter filter = new SearchFilter();
+				try {
+					filter.setStartTime(DateUtils.parseDate("2010-01-01 00:00:00", Constants.DATE_FORMAT));
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				filter.setEndTime(new Date());
+				
+				Map<String, Double> categorySearchSummary = reportService.getOverallCategorySearchSummaryReport(5, filter);
+				Logger.debug(categorySearchSummary.toString());
+				assertThat(categorySearchSummary.size()).isGreaterThan(0);
+			}
+		});
+	}	
+	
+	@Ignore
 	public void testTimeBasedSearchSummaryReport() {
 		running(fakeApplication(), new Runnable() {
 			public void run() {
