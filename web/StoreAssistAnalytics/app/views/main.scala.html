@@ -1,15 +1,45 @@
-@(title: String)(content: Html)
-
 <!DOCTYPE html>
 
 <html>
-    <head>
-        <title>@title</title>
-        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")">
-        <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
-        <script src="@routes.Assets.at("javascripts/jquery-1.9.0.min.js")" type="text/javascript"></script>
-    </head>
-    <body>
-        @content
-    </body>
+<head>
+	<title>Store Analytics</title>
+	<link href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.2/css/bootstrap.min.css" rel="stylesheet">
+	<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+	
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js" type="text/javascript"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/highcharts/3.0.2/highcharts.js" type="text/javascript"></script>
+</head>
+<body>
+	<header class="well">
+		<h1 align="center">
+			<i class="fa fa-shopping-cart text-error"></i>&nbsp;<b><a
+				href="@routes.ReportingController.index()">Store Assist
+					Analytics ..</a></b>
+		</h1>
+	</header>
+
+	<div class="container">
+	
+        <!-- Report Filters -->	
+		<form class="form-inline">
+			<span> <label for="report_type"><b>Report Type</b></label> <select
+				id="report_type" name="report_type">
+					<option value="overall_search" selected="selected">Overall
+						Search Summary</option>
+					<option value="item_search">Item Search Summary</option>
+					<option value="time_search">Time Search Summary</option>
+			</select>
+			</span> <span> <label for="start_time"><b>Start Time</b></label> <input
+				type="date" name="start_time" id="start_time">
+			</span> <span> <label for="end_time"><b>End Time</b></label> <input
+				type="date" name="end_time" id="end_time">
+			</span>
+		</form>
+		
+		<!-- Report Chart : TODO -->
+		<div id="report_chart"></div>
+	</div>
+	
+</body>
 </html>
