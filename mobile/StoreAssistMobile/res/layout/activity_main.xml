@@ -25,6 +25,7 @@
 	        android:layout_height="wrap_content"
 	        android:text="Welcome to:"
 	        android:textSize="@dimen/edittext_font_size_small"
+	        android:visibility="gone"
 	        />
 	    
 	    <!-- Store Name + Address -->
@@ -33,8 +34,6 @@
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
 	        android:layout_below="@id/text_welcome_to"
-	        android:layout_marginTop="@dimen/inner_margin_top"
-	        android:text="Dummy Store Info"
 	        android:textSize="@dimen/edittext_font_size"
 	        android:textStyle="bold" />
 	    

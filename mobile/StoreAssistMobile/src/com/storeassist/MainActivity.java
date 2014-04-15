@@ -35,11 +35,15 @@ public class MainActivity extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
-		setUI();
+		IdentifyStoreTask identifyStoreTask = new IdentifyStoreTask(this);
+		identifyStoreTask.execute();
+		
+//		setUI();
 	}
 	
-	private void setUI()
+	public void setUI()
 	{
+		
 		if(AppConstants.DEMO_BUILD)
 		{
 			TextView storeInfoTextView = (TextView) findViewById(R.id.text_store_info);
@@ -66,6 +70,9 @@ public class MainActivity extends Activity
 //				// TODO: Show a dropdown. Ask user to select the store.
 //			}
 		}
+		
+		// Make the 'Welcome to' textview visible.
+		findViewById(R.id.text_welcome_to).setVisibility(View.VISIBLE);
 		
 		// Get the image for the Store Name/address
 		populateMapImage();

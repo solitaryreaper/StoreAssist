@@ -27,7 +27,7 @@ public class IdentifyStoreTask extends AsyncTask<Void, Void, Void>
 	{
 		try
 		{
-			Thread.sleep(2);
+			Thread.sleep(2000);
 		} 
 		catch (InterruptedException e)
 		{
@@ -55,6 +55,8 @@ public class IdentifyStoreTask extends AsyncTask<Void, Void, Void>
 		// Dismiss the Progress Dialog first.
 		if (mProgressDialog != null)
 			mProgressDialog.dismiss();
+		
+		((MainActivity)mContext).setUI();
 	}
 
 }
