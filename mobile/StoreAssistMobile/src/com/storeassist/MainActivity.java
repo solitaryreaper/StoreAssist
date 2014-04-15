@@ -3,11 +3,11 @@ package com.storeassist;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -35,32 +35,31 @@ public class MainActivity extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
-		setUI();
+		IdentifyStoreTask identifyStoreTask = new IdentifyStoreTask(this);
+		identifyStoreTask.execute();
+		
+//		setUI();
 	}
 	
-	private void setUI()
+	public void setUI()
 	{
-		EditText itemNameEditText = (EditText) findViewById(R.id.edittext_item);
-		itemNameEditText.setOnEditorActionListener(new OnEditorActionListener()
-		{
-			public boolean onEditorAction(TextView v, int actionId, KeyEvent event)
-			{
-				if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER))
-						|| (actionId == EditorInfo.IME_ACTION_DONE))
-				{
-					locateItem();
-				}
-				return false;
-			}
-		});
+		int numStoresIdentified = 0;
 		
 		if(AppConstants.DEMO_BUILD)
 		{
 			TextView storeInfoTextView = (TextView) findViewById(R.id.text_store_info);
 			storeInfoTextView.setText("Fresh Madison Market\n704 University Avenue, Madison, WI");
+			
+			numStoresIdentified = 1;
 		}
 		else
 		{
+			// BIG TODOs:
+			// 1. Get Lat and Lon
+			// 2. Get the Exact Address (or may approximate one)
+			// 3. Send the user's address (incl. zip) to the server to get the Store Name(s)from the address
+			// 4. If multiple, let the user identify the store, otherwise just display the single store
+			
 			// Fresh Madison Market (704 University Ave): 43.073012, -89.397511
 			// 2110 University Avenue: Lat= 43.073156, Lon= -89.422204
 //			List<Address> validAddresses = AppUtils.getAddress(this, 43.073012, -89.397511);
@@ -75,12 +74,49 @@ public class MainActivity extends Activity
 //			}
 		}
 		
-		populateMapImage();
+		// TODO: The UI code given below should execute once user identified with exactly one store.
+		
+		if(numStoresIdentified == 1)	// WE ARE GOOD TO GO
+		{
+			// Make the 'Welcome to' textview visible.
+			findViewById(R.id.text_welcome_to).setVisibility(View.VISIBLE);
+			
+			// Get the image for the Store Name/address
+			populateMapImage();
+			
+			// Set up the listener for the 'Done' button on virtual keyboard
+			EditText itemNameEditText = (EditText) findViewById(R.id.edittext_item);
+			itemNameEditText.setEnabled(true);
+			itemNameEditText.setOnEditorActionListener(new OnEditorActionListener()
+			{
+				public boolean onEditorAction(TextView v, int actionId, KeyEvent event)
+				{
+					if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER))
+							|| (actionId == EditorInfo.IME_ACTION_DONE))
+					{
+						locateItem();
+					}
+					return false;
+				}
+			});
+			
+			((Button) findViewById(R.id.btn_locate)).setEnabled(true);
+		}
+		else
+		{
+			// Make the 'Welcome to' textview gone.
+			findViewById(R.id.text_welcome_to).setVisibility(View.GONE);
+			((EditText) findViewById(R.id.edittext_item)).setEnabled(false);
+			((Button) findViewById(R.id.btn_locate)).setEnabled(false);
+			
+			displayErrorText(AppConstants.ERROR_STORE_NOT_FOUND);
+		}
 
 	}
 
 	public void populateMapImage()
 	{
+		// TODO: Get it using Google Maps Image API
 		ImageView streetMapImage = (ImageView) findViewById(R.id.image_street_map);
 		streetMapImage.setImageResource(R.drawable.demo_street_map);
 	}
@@ -176,6 +212,10 @@ public class MainActivity extends Activity
 			errorString = "Sorry, '" + itemName  +"' is not present in the store.";
 			break;
 			
+		case AppConstants.ERROR_STORE_NOT_FOUND:
+			
+			errorString = "Sorry, we're unable to identify the store.";
+			break;
 		}
 		
 		TextView locationTextView = (TextView) findViewById(R.id.text_error);
