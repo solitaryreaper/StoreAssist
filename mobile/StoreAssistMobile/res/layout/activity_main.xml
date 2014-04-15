@@ -74,7 +74,8 @@
         android:onClick="onButtonClick"
         android:textSize="@dimen/button_font_size"
         android:background="@drawable/active_pressed_button_selector"
-        android:padding="@dimen/button_padding_horizontal" />
+        android:padding="@dimen/button_padding_horizontal"
+        android:enabled="false" />
 
     <!-- Error Display -->
     <TextView

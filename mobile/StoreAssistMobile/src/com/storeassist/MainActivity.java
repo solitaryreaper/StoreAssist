@@ -3,11 +3,11 @@ package com.storeassist;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -43,11 +43,14 @@ public class MainActivity extends Activity
 	
 	public void setUI()
 	{
+		int numStoresIdentified = 0;
 		
 		if(AppConstants.DEMO_BUILD)
 		{
 			TextView storeInfoTextView = (TextView) findViewById(R.id.text_store_info);
 			storeInfoTextView.setText("Fresh Madison Market\n704 University Avenue, Madison, WI");
+			
+			numStoresIdentified = 1;
 		}
 		else
 		{
@@ -71,26 +74,43 @@ public class MainActivity extends Activity
 //			}
 		}
 		
-		// Make the 'Welcome to' textview visible.
-		findViewById(R.id.text_welcome_to).setVisibility(View.VISIBLE);
+		// TODO: The UI code given below should execute once user identified with exactly one store.
 		
-		// Get the image for the Store Name/address
-		populateMapImage();
-		
-		// Set up the listener for the 'Done' button on virtual keyboard
-		EditText itemNameEditText = (EditText) findViewById(R.id.edittext_item);
-		itemNameEditText.setOnEditorActionListener(new OnEditorActionListener()
+		if(numStoresIdentified == 1)	// WE ARE GOOD TO GO
 		{
-			public boolean onEditorAction(TextView v, int actionId, KeyEvent event)
+			// Make the 'Welcome to' textview visible.
+			findViewById(R.id.text_welcome_to).setVisibility(View.VISIBLE);
+			
+			// Get the image for the Store Name/address
+			populateMapImage();
+			
+			// Set up the listener for the 'Done' button on virtual keyboard
+			EditText itemNameEditText = (EditText) findViewById(R.id.edittext_item);
+			itemNameEditText.setEnabled(true);
+			itemNameEditText.setOnEditorActionListener(new OnEditorActionListener()
 			{
-				if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER))
-						|| (actionId == EditorInfo.IME_ACTION_DONE))
+				public boolean onEditorAction(TextView v, int actionId, KeyEvent event)
 				{
-					locateItem();
+					if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER))
+							|| (actionId == EditorInfo.IME_ACTION_DONE))
+					{
+						locateItem();
+					}
+					return false;
 				}
-				return false;
-			}
-		});
+			});
+			
+			((Button) findViewById(R.id.btn_locate)).setEnabled(true);
+		}
+		else
+		{
+			// Make the 'Welcome to' textview gone.
+			findViewById(R.id.text_welcome_to).setVisibility(View.GONE);
+			((EditText) findViewById(R.id.edittext_item)).setEnabled(false);
+			((Button) findViewById(R.id.btn_locate)).setEnabled(false);
+			
+			displayErrorText(AppConstants.ERROR_STORE_NOT_FOUND);
+		}
 
 	}
 
@@ -192,6 +212,10 @@ public class MainActivity extends Activity
 			errorString = "Sorry, '" + itemName  +"' is not present in the store.";
 			break;
 			
+		case AppConstants.ERROR_STORE_NOT_FOUND:
+			
+			errorString = "Sorry, we're unable to identify the store.";
+			break;
 		}
 		
 		TextView locationTextView = (TextView) findViewById(R.id.text_error);

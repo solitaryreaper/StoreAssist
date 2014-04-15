@@ -10,7 +10,8 @@ public class AppConstants
 	// Error Codes
 	public static final int ERROR_ITEM_INVALID = 1;
 	public static final int ERROR_ITEM_NOT_PRESENT = 2;
-	public static final int STORE_INVALID = 11;
+	public static final int ERROR_STORE_INVALID = 11;
+	public static final int ERROR_STORE_NOT_FOUND = 12;
 	
 	// Item Location Server
 	public static final String ITEM_LOCATION_SERVER_IP = "107.170.62.160";
