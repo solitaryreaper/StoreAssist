@@ -40,20 +40,6 @@ public class MainActivity extends Activity
 	
 	private void setUI()
 	{
-		EditText itemNameEditText = (EditText) findViewById(R.id.edittext_item);
-		itemNameEditText.setOnEditorActionListener(new OnEditorActionListener()
-		{
-			public boolean onEditorAction(TextView v, int actionId, KeyEvent event)
-			{
-				if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER))
-						|| (actionId == EditorInfo.IME_ACTION_DONE))
-				{
-					locateItem();
-				}
-				return false;
-			}
-		});
-		
 		if(AppConstants.DEMO_BUILD)
 		{
 			TextView storeInfoTextView = (TextView) findViewById(R.id.text_store_info);
@@ -61,6 +47,12 @@ public class MainActivity extends Activity
 		}
 		else
 		{
+			// BIG TODOs:
+			// 1. Get Lat and Lon
+			// 2. Get the Exact Address (or may approximate one)
+			// 3. Send the user's address (incl. zip) to the server to get the Store Name(s)from the address
+			// 4. If multiple, let the user identify the store, otherwise just display the single store
+			
 			// Fresh Madison Market (704 University Ave): 43.073012, -89.397511
 			// 2110 University Avenue: Lat= 43.073156, Lon= -89.422204
 //			List<Address> validAddresses = AppUtils.getAddress(this, 43.073012, -89.397511);
@@ -75,12 +67,29 @@ public class MainActivity extends Activity
 //			}
 		}
 		
+		// Get the image for the Store Name/address
 		populateMapImage();
+		
+		// Set up the listener for the 'Done' button on virtual keyboard
+		EditText itemNameEditText = (EditText) findViewById(R.id.edittext_item);
+		itemNameEditText.setOnEditorActionListener(new OnEditorActionListener()
+		{
+			public boolean onEditorAction(TextView v, int actionId, KeyEvent event)
+			{
+				if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER))
+						|| (actionId == EditorInfo.IME_ACTION_DONE))
+				{
+					locateItem();
+				}
+				return false;
+			}
+		});
 
 	}
 
 	public void populateMapImage()
 	{
+		// TODO: Get it using Google Maps Image API
 		ImageView streetMapImage = (ImageView) findViewById(R.id.image_street_map);
 		streetMapImage.setImageResource(R.drawable.demo_street_map);
 	}
