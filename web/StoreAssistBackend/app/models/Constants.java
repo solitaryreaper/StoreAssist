@@ -9,7 +9,7 @@ public class Constants {
 	
 	public static final String DB_ITEM_TABLE = "item_info";
 	public static final String DB_STORE_TABLE = "store";
-	
+	public static final String DB_LOG_TABLE = "search_log";
 	
 	
 	// Store entities

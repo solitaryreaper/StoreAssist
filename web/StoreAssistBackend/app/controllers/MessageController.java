@@ -98,7 +98,7 @@ public class MessageController extends Controller {
 		
 		LOG.severe("Search Terms : (" + storeId + ", " + item + ")");
 		List<String> items = Arrays.asList(item.split(","));
-		Map<String, List<ItemLocation>> itemsLocations = searchService.searchItemsLocations(storeId, items);
+		Map<String, List<ItemLocation>> itemsLocations = searchService.searchItemsLocations(storeId, items, true);
 		
 		StringBuilder output = new StringBuilder();
 		output.append("[");
