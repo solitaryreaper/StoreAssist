@@ -8,9 +8,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.time.DateUtils;
+
 import models.Constants;
 import models.SearchFilter;
 import models.SearchFilter.AggregativeLevel;
+import models.SearchLog;
 import models.utils.DBUtils;
 import play.Logger;
 
@@ -39,11 +42,11 @@ public class ReportingService {
 		Date endTime = filter.getEndTime();
 		
 		StringBuilder searchSQL = new StringBuilder();
-		searchSQL.append(" SELECT item_search_string, COUNT(1) AS cnt");
+		searchSQL.append(" SELECT search_token, COUNT(1) AS cnt");
 		searchSQL.append(" FROM ").append(Constants.DB_LOG_TABLE);
 		searchSQL.append(" WHERE search_time >= '" + formatter.format(startTime) + "'");
 		searchSQL.append(" AND search_time < '" + formatter.format(endTime) + "'");
-		searchSQL.append(" GROUP BY item_search_string");
+		searchSQL.append(" GROUP BY search_token");
 		searchSQL.append(" ORDER BY cnt DESC");
 		searchSQL.append(" LIMIT " + numResults);
 		
@@ -60,7 +63,7 @@ public class ReportingService {
 			ResultSet rs = prepStmt.executeQuery();
 			double cumulativePercent = 0.0;
 			while(rs.next()) {
-				String searchItem = rs.getString("item_search_string");
+				String searchItem = rs.getString("search_token");
 				int count = rs.getInt("cnt");
 				
 				double searchPercentage = (count*100)/(double)totalLogs;
@@ -97,7 +100,7 @@ public class ReportingService {
 		StringBuilder searchSQL = new StringBuilder();
 		searchSQL.append(" SELECT item.section AS category, COUNT(1) AS cnt");
 		searchSQL.append(" FROM ").append(Constants.DB_LOG_TABLE).append(" log");
-		searchSQL.append(" LEFT OUTER JOIN ").append(Constants.DB_ITEM_TABLE).append(" item ON (item.name = log.item_search_string)");
+		searchSQL.append(" LEFT OUTER JOIN ").append(Constants.DB_ITEM_TABLE).append(" item ON (item.name = log.search_token)");
 		searchSQL.append(" WHERE log.search_time >= '" + formatter.format(startTime) + "'");
 		searchSQL.append(" AND log.search_time < '" + formatter.format(endTime) + "'");
 		searchSQL.append(" GROUP BY item.section");
@@ -117,12 +120,16 @@ public class ReportingService {
 			ResultSet rs = prepStmt.executeQuery();
 			double cumulativePercent = 0.0;
 			while(rs.next()) {
-				String searchItem = rs.getString("category");
+				String category = rs.getString("category");
+				if(category == null || category.toLowerCase().equals("null")) {
+					continue;
+				}
+				
 				int count = rs.getInt("cnt");
 				
 				double searchPercentage = (count*100)/(double)totalLogs;
 				cumulativePercent += searchPercentage;
-				itemSearchSummary.put(searchItem, searchPercentage);
+				itemSearchSummary.put(category, searchPercentage);
 			}
 			
 			if(Double.compare(cumulativePercent, 100.0) != 0) {
@@ -204,7 +211,7 @@ public class ReportingService {
 		searchSQL.append(" WHERE search_time >= '" + formatter.format(startTime) + "'");
 		searchSQL.append(" AND search_time < '" + formatter.format(endTime) + "'");
 		if(filter.getItems() != null) {
-			searchSQL.append(" AND LOWER(item_search_string) IN (");
+			searchSQL.append(" AND LOWER(search_token) IN (");
 			for(String item : filter.getItems()) {
 				searchSQL.append("'" + item.toLowerCase() + "'");
 			}
@@ -268,5 +275,37 @@ public class ReportingService {
 		DBUtils.cleanDBResources(dbConn, prepStmt);	
 		
 		return itemNames;		
+	}
+	
+	public List<SearchLog> getSearchLogs(int numLogs)
+	{
+		List<SearchLog> searchLogs = Lists.newArrayList();
+		
+		String logFetchSQL = 
+			"SELECT search_token, store_id, search_time FROM " + Constants.DB_LOG_TABLE + " ORDER BY search_time DESC LIMIT " + numLogs; 
+		
+		Connection dbConn = DBUtils.getDBConnection();
+		PreparedStatement prepStmt = null;
+		try {
+			prepStmt = dbConn.prepareStatement(logFetchSQL);
+			ResultSet rs = prepStmt.executeQuery();
+			while(rs.next()) {
+				String searchToken = rs.getString("search_token");
+				int storeId = rs.getInt("store_id");
+				String dateString = rs.getString("search_time").substring(0, 19);
+				Date searchDate = DateUtils.parseDate(dateString, Constants.DATE_FORMAT);
+				
+				searchLogs.add(new SearchLog(searchToken, storeId, searchDate));
+			}
+		}
+		catch(Exception e) {
+			Logger.error("Failed to get search logs. Reason : " + e.getMessage());
+			e.printStackTrace();
+		}		
+		
+		DBUtils.closeDBConnection(dbConn);
+		DBUtils.cleanDBResources(dbConn, prepStmt);	
+		
+		return searchLogs;
 	}
 }

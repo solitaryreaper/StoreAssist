@@ -8,6 +8,7 @@ import models.Constants;
 import models.ReportType;
 import models.SearchFilter;
 import models.SearchFilter.AggregativeLevel;
+import models.SearchLog;
 import models.service.ReportingService;
 
 import org.apache.commons.lang3.time.DateUtils;
@@ -17,6 +18,7 @@ import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
 import views.html.main;
+import views.html.logs;
 
 public class ReportingController extends Controller {
 
@@ -111,5 +113,11 @@ public class ReportingController extends Controller {
     	
     	return new SearchFilter(startDate, endDate, report);
     			
+    }
+    
+    public static Result showSearchLogs(int numLogs)
+    {
+    	List<SearchLog> searchLogs = reportService.getSearchLogs(numLogs);
+    	return ok(logs.render("Fresh Madison Market", searchLogs));
     }
 }

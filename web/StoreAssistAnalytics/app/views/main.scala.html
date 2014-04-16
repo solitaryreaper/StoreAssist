@@ -140,11 +140,12 @@
 			}
 		});
 		
+		// Generates the start and end date range, based on the reports chosen
 		function getDateRangeParameters()
 		{
 			var dateMap = {};
-			var startTime;
-			var endTime;
+			var startTime = $("#start_time").val();
+			var endTime = $("#end_time").val();
 			dateMap['start_time'] = startTime;
 			dateMap['end_time'] = endTime;
 			
@@ -193,7 +194,7 @@
 	        options1.chart.renderTo = "report_chart";
 	        options1.series[0].data = itemSummary;
 	        
-            options1.title.text = 'Overall Item Search Summary Report';
+            options1.title.text = 'Most Searched Items';
             options1.subtitle.text = 'Time : (' + startTime + ',' + endTime + ')';
             
             options1.tooltip.formatter = function() {
@@ -204,7 +205,7 @@
             options2.chart.renderTo = "report_chart2";
             options2.series[0].data = categorySummary;
             
-            options2.title.text = 'Overall Category Search Summary Report';
+            options2.title.text = 'Most Searched Item Categories';
             options2.subtitle.text = 'Time : (' + startTime + ',' + endTime + ')';
             
             options2.tooltip.formatter = function() {
