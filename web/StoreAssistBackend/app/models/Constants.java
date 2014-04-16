@@ -11,7 +11,8 @@ public class Constants {
 	public static final String DB_STORE_TABLE = "store";
 	public static final String DB_LOG_TABLE = "search_log";
 	
-	
 	// Store entities
 	public static final int FRESH_MADISON_MARKET = 1;
+	
+	public static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
 }
