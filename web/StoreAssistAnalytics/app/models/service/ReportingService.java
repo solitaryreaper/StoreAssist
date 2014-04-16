@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import models.Constants;
@@ -55,7 +56,7 @@ public class ReportingService {
 		try {
 			prepStmt = dbConn.prepareStatement(searchSQL.toString());
 			
-			int totalLogs = getTotalLogs();
+			int totalLogs = getTotalLogs(startTime, endTime);
 			ResultSet rs = prepStmt.executeQuery();
 			double cumulativePercent = 0.0;
 			while(rs.next()) {
@@ -67,7 +68,9 @@ public class ReportingService {
 				itemSearchSummary.put(searchItem, searchPercentage);
 			}
 			
-			itemSearchSummary.put(Constants.REMAINING_ITEMS, 100 - cumulativePercent);
+			if(Double.compare(cumulativePercent, 100.0) != 0) {
+				itemSearchSummary.put(Constants.REMAINING_ITEMS, 100 - cumulativePercent);				
+			}
 		}
 		catch(Exception e) {
 			Logger.error("Failed to get search summary results. Reason : " + e.getMessage());
@@ -97,7 +100,7 @@ public class ReportingService {
 		searchSQL.append(" LEFT OUTER JOIN ").append(Constants.DB_ITEM_TABLE).append(" item ON (item.name = log.item_search_string)");
 		searchSQL.append(" WHERE log.search_time >= '" + formatter.format(startTime) + "'");
 		searchSQL.append(" AND log.search_time < '" + formatter.format(endTime) + "'");
-		searchSQL.append(" GROUP BY log.item_search_string");
+		searchSQL.append(" GROUP BY item.section");
 		searchSQL.append(" ORDER BY cnt DESC");
 		searchSQL.append(" LIMIT " + numResults);
 		
@@ -110,7 +113,7 @@ public class ReportingService {
 		try {
 			prepStmt = dbConn.prepareStatement(searchSQL.toString());
 			
-			int totalLogs = getTotalLogs();
+			int totalLogs = getTotalLogs(startTime, endTime);
 			ResultSet rs = prepStmt.executeQuery();
 			double cumulativePercent = 0.0;
 			while(rs.next()) {
@@ -122,7 +125,9 @@ public class ReportingService {
 				itemSearchSummary.put(searchItem, searchPercentage);
 			}
 			
-			itemSearchSummary.put(Constants.REMAINING_ITEMS, 100 - cumulativePercent);
+			if(Double.compare(cumulativePercent, 100.0) != 0) {
+				itemSearchSummary.put(Constants.REMAINING_ITEMS, 100 - cumulativePercent);				
+			}
 		}
 		catch(Exception e) {
 			Logger.error("Failed to get category search summary results. Reason : " + e.getMessage());
@@ -210,17 +215,20 @@ public class ReportingService {
 	}
 	
 	/**
-	 * Get the total number of log entries in database
+	 * Get the total number of log entries in database between the specified time intervals
 	 */
-	public int getTotalLogs()
+	public int getTotalLogs(Date startTime, Date endTime)
 	{
 		int totalSearchLogs = 0;
-		String totalLogsSQL = "SELECT COUNT(1) AS cnt FROM " + Constants.DB_LOG_TABLE;
+		StringBuilder totalLogsSQL = new StringBuilder();
+		totalLogsSQL.append(" SELECT COUNT(1) AS cnt FROM " + Constants.DB_LOG_TABLE);
+		totalLogsSQL.append(" WHERE search_time >= '" + formatter.format(startTime) + "'");
+		totalLogsSQL.append(" AND search_time < '" + formatter.format(endTime) + "'");		
 		
 		Connection dbConn = DBUtils.getDBConnection();
 		PreparedStatement prepStmt = null;
 		try {
-			prepStmt = dbConn.prepareStatement(totalLogsSQL);
+			prepStmt = dbConn.prepareStatement(totalLogsSQL.toString());
 			ResultSet rs = prepStmt.executeQuery();
 			while(rs.next()) {
 				totalSearchLogs = rs.getInt("cnt");
@@ -235,5 +243,30 @@ public class ReportingService {
 		DBUtils.cleanDBResources(dbConn, prepStmt);	
 		
 		return totalSearchLogs;
+	}
+	
+	public List<String> getAllItemNames()
+	{
+		List<String> itemNames = Lists.newArrayList();
+		String distintItemsSQL = "SELECT DISTINCT(name) AS name FROM " + Constants.DB_ITEM_TABLE + " ORDER BY name";
+		
+		Connection dbConn = DBUtils.getDBConnection();
+		PreparedStatement prepStmt = null;
+		try {
+			prepStmt = dbConn.prepareStatement(distintItemsSQL);
+			ResultSet rs = prepStmt.executeQuery();
+			while(rs.next()) {
+				itemNames.add(rs.getString("name"));
+			}
+		}
+		catch(Exception e) {
+			Logger.error("Failed to get distinct item names. Reason : " + e.getMessage());
+			e.printStackTrace();
+		}		
+		
+		DBUtils.closeDBConnection(dbConn);
+		DBUtils.cleanDBResources(dbConn, prepStmt);	
+		
+		return itemNames;		
 	}
 }

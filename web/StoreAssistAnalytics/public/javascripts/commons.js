@@ -172,3 +172,10 @@ function getDefaultPieChartOptions()
     return pie_options;
 
 }
+
+
+// -------------------------------- Date functions -----------------------------------------
+function getCurrentDate()
+{
+	return new Date().toJSON().slice(0,10);
+}

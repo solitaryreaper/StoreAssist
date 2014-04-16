@@ -1,6 +1,7 @@
 package controllers;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import models.Constants;
@@ -22,7 +23,8 @@ public class ReportingController extends Controller {
 	private static ReportingService reportService = new ReportingService();
 	
     public static Result index() {
-        return ok(main.render("Fresh Madison Market"));
+    	List<String> itemNames = reportService.getAllItemNames();
+        return ok(main.render("Fresh Madison Market", itemNames));
     }
     
     /**
