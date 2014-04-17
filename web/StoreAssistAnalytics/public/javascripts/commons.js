@@ -47,7 +47,6 @@ function getDefaultOptions()
 		    fontWeight: 'bold',
 		    fontSize: '12px',
 		    fontFamily: 'Trebuchet MS, Verdana, sans-serif'
-
 		 }
 	      }
 	   },

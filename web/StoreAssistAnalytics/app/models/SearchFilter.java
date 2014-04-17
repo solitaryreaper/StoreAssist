@@ -26,9 +26,6 @@ public class SearchFilter {
 	
 	private Date startTime;
 	private Date endTime = new Date();
-	
-	private ReportType reportType;
-	private AggregativeLevel summaryLevel = AggregativeLevel.TIME_DAY;
 
 	private List<String> items;
 	
@@ -37,11 +34,10 @@ public class SearchFilter {
 		
 	}
 	
-	public SearchFilter(Date startDate, Date endDate, ReportType report)
+	public SearchFilter(Date startDate, Date endDate)
 	{
 		this.startTime = startDate;
 		this.endTime = endDate;
-		this.reportType = report;
 	}
 	
 	public Date getStartTime() {
@@ -58,22 +54,6 @@ public class SearchFilter {
 
 	public void setEndTime(Date endTime) {
 		this.endTime = endTime;
-	}
-
-	public ReportType getReportType() {
-		return reportType;
-	}
-
-	public void setReportType(ReportType reportType) {
-		this.reportType = reportType;
-	}
-
-	public AggregativeLevel getSummaryLevel() {
-		return summaryLevel;
-	}
-
-	public void setSummaryLevel(AggregativeLevel summaryLevel) {
-		this.summaryLevel = summaryLevel;
 	}
 
 	public List<String> getItems() {

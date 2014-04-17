@@ -5,9 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import models.Constants;
-import models.ReportType;
 import models.SearchFilter;
-import models.SearchFilter.AggregativeLevel;
 import models.SearchLog;
 import models.service.ReportingService;
 
@@ -17,8 +15,10 @@ import play.Logger;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
-import views.html.main;
 import views.html.logs;
+import views.html.main;
+
+import com.google.common.collect.Lists;
 
 public class ReportingController extends Controller {
 
@@ -29,40 +29,12 @@ public class ReportingController extends Controller {
         return ok(main.render("Fresh Madison Market", itemNames));
     }
     
-    /**
-     * Generates analysis report based on the date and report type filters 
-     */
-    public static Result generateReport(String reportType, String startTime, String endTime)
+    public static Result generateOverallItemSearchSummaryReport(String startTime, String endTime)
     {
     	startTime = startTime + Constants.DEFAULT_DATETIME_SUFFIX;
     	endTime = endTime + Constants.DEFAULT_DATETIME_SUFFIX;
-    	reportType = reportType.trim();
     	
-    	SearchFilter filter = getSearchFilter(reportType, startTime, endTime);
-    	
-    	String item = "";
-    	Result result = null;
-    	if(filter.getReportType().equals(ReportType.OVERALL_ITEM_SEARCH_SUMMARY_REPORT)) {
-    		result = generateOverallItemSearchSummaryReport(filter);
-    	}
-    	else if(filter.getReportType().equals(ReportType.OVERALL_CATEGORY_SEARCH_SUMMARY_REPORT)) {
-    		result = generateOverallCategorySearchSummaryReport(filter);
-    	}
-    	else if(filter.getReportType().equals(ReportType.SEARCH_BY_ITEM_REPORT)) {
-    		result = getItemSearchSummaryReport(item, filter);
-    	}
-    	else if(filter.getReportType().equals(ReportType.SEARCH_BY_TIME_REPORT)) {
-    		result = getTimeBasedSearchSummaryReport(filter);
-    	}
-    	
-    	Logger.info("Results : " + result.toString());
-    	return result;
-    	
-    }
-    
-    private static Result generateOverallItemSearchSummaryReport(SearchFilter filter)
-    {
-    	filter.setSummaryLevel(AggregativeLevel.ITEM);
+    	SearchFilter filter = getSearchFilter(startTime, endTime);
     	
     	int numResults = Constants.NUM_SEARCH_SUMMARY_RESULTS;
     	Map<String, Double> summaryReport = reportService.getOverallItemSearchSummaryReport(numResults, filter);
@@ -70,9 +42,12 @@ public class ReportingController extends Controller {
     	return ok(Json.toJson(summaryReport));
     }
     
-    private static Result generateOverallCategorySearchSummaryReport(SearchFilter filter)
+    public static Result generateOverallCategorySearchSummaryReport(String startTime, String endTime)
     {
-    	filter.setSummaryLevel(AggregativeLevel.ITEM);
+    	startTime = startTime + Constants.DEFAULT_DATETIME_SUFFIX;
+    	endTime = endTime + Constants.DEFAULT_DATETIME_SUFFIX;
+    	
+    	SearchFilter filter = getSearchFilter(startTime, endTime);
     	
     	int numResults = Constants.NUM_SEARCH_SUMMARY_RESULTS;
     	Map<String, Double> summaryReport = reportService.getOverallCategorySearchSummaryReport(numResults, filter);
@@ -80,38 +55,43 @@ public class ReportingController extends Controller {
     	return ok(Json.toJson(summaryReport));
     }    
     
-    private static Result getItemSearchSummaryReport(String item, SearchFilter filter)
+    public static Result getItemSearchSummaryReport(String item, String startTime, String endTime)
     {
-    	filter.setSummaryLevel(AggregativeLevel.TIME_DAY);
+    	startTime = startTime + Constants.DEFAULT_DATETIME_SUFFIX;
+    	endTime = endTime + Constants.DEFAULT_DATETIME_SUFFIX;
     	
-    	Map<String, Integer> summaryReport = reportService.getItemBasedSearchSummaryReport("Avocados", filter);
+    	SearchFilter filter = getSearchFilter(startTime, endTime);
+    	filter.setItems(Lists.newArrayList(item));
+    	
+    	Map<String, Integer> summaryReport = reportService.getItemBasedSearchSummaryReport(item, filter);
     	return ok(Json.toJson(summaryReport));
     }
     
-    private static Result getTimeBasedSearchSummaryReport(SearchFilter filter)
+    public static Result getTimeBasedSearchSummaryReport(String startTime, String endTime)
     {
-    	filter.setSummaryLevel(AggregativeLevel.TIME_DAY);
+    	startTime = startTime + Constants.DEFAULT_DATETIME_SUFFIX;
+    	endTime = endTime + Constants.DEFAULT_DATETIME_SUFFIX;
+    	
+    	SearchFilter filter = getSearchFilter(startTime, endTime);
     	
     	Map<String, Integer> summaryReport = reportService.getTimeBasedSearchSummaryReport(filter);
     	return ok(Json.toJson(summaryReport));
     }
     
-    private static SearchFilter getSearchFilter(String reportType, String startTime, String endTime)
+    private static SearchFilter getSearchFilter(String startTime, String endTime)
     {
     	Date startDate = null;
     	Date endDate = null;
-    	ReportType report = null;
     	try {
         	startDate = DateUtils.parseDate(startTime, Constants.DATE_FORMAT);
         	endDate = DateUtils.parseDate(endTime, Constants.DATE_FORMAT);
-        	report = ReportType.getReportType(reportType); 		
     	}
     	catch(Exception e) {
-    		Logger.error("Failed to parse inputs. " + startTime + ", " + endTime + ", " + reportType);
+    		Logger.error("Failed to parse inputs. " + startTime + ", " + endTime);
     		e.printStackTrace();
     	}
     	
-    	return new SearchFilter(startDate, endDate, report);
+    	return new SearchFilter(startDate, endDate);
     			
     }
     

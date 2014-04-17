@@ -92,8 +92,13 @@
 		
 		function initialize()
 		{
+			var initStartTime = "2014-04-01";
+			var initEndTime = getCurrentDate();
 			$("#item_name_filter").hide();
-		     loadOverallSummaryChart("2014-04-01", "2014-04-15");
+		    loadOverallSummaryChart(initStartTime, initEndTime);
+		    
+		    $("#start_time").val(initStartTime);
+		    $("#end_time").val(initEndTime);
 		}
 		
 		$("#report_type").on("change", function()  {
@@ -164,7 +169,7 @@
 	        $.ajax({
 	             type: 'GET',
 	             async: false,
-	             url: '/report?reportType=overall_item_search&=startTime=' + startTime + '&endTime=' + endTime,
+	             url: '/all_items_search_report?startTime=' + startTime + '&endTime=' + endTime,
 	             dataType: 'json',
 	             success: function(data, textStatus, xhr) {
 	                 $.each(data, function (item, frequency) {
@@ -177,7 +182,7 @@
             $.ajax({
                  type: 'GET',
                  async: false,
-                 url: '/report?reportType=overall_category_search&=startTime=' + startTime + '&endTime=' + endTime,
+                 url: '/category_search_report?=startTime=' + startTime + '&endTime=' + endTime,
                  dataType: 'json',
                  success: function(data, textStatus, xhr) {
                      $.each(data, function (category, frequency) {
@@ -186,27 +191,30 @@
                  }
              });
             
+            var formattedStartTime = Highcharts.dateFormat('%b %d, %Y', Date.parse(startTime));
+            var formattedEndTime = Highcharts.dateFormat('%b %d, %Y', Date.parse(endTime));
+            
 	        var options = getDefaultPieChartOptions();
 	        
             var options1 = jQuery.extend(true, {}, options);
             var options2 = jQuery.extend(true, {}, options);
             
-	        options1.chart.renderTo = "report_chart";
+	        options1.chart.renderTo = "report_chart2";
 	        options1.series[0].data = itemSummary;
 	        
             options1.title.text = 'Most Searched Items';
-            options1.subtitle.text = 'Time : (' + startTime + ',' + endTime + ')';
+            options1.subtitle.text = 'Time : (' + formattedStartTime + ' - ' + formattedEndTime + ')'; 
             
             options1.tooltip.formatter = function() {
                 return '<b>Item:</b> '+ this.point.name +
                     ', <b>Percentage</b> '+ this.percentage.toFixed(2) +' %';
             }
             
-            options2.chart.renderTo = "report_chart2";
+            options2.chart.renderTo = "report_chart";
             options2.series[0].data = categorySummary;
             
-            options2.title.text = 'Most Searched Item Categories';
-            options2.subtitle.text = 'Time : (' + startTime + ',' + endTime + ')';
+            options2.title.text = 'Most Searched Categories';
+            options2.subtitle.text = 'Time : (' + formattedStartTime + ' - ' + formattedEndTime + ')'; 
             
             options2.tooltip.formatter = function() {
                 return '<b>Category:</b> '+ this.point.name +
@@ -220,6 +228,8 @@
 		// function to generate item-based search summary report
 		function loadItemSearchSummaryReport(startTime, endTime)
 		{
+			var item = $("#item_name").val();
+			
 			console.log("Item search summary report ..");
 			
 			var timeTokens = [];
@@ -227,39 +237,44 @@
             $.ajax({
                 type: 'GET',
                 async: false,
-                url: '/report?reportType=item_search&=startTime=' + startTime + '&endTime=' + endTime,
+                url: '/item_search_report?item='+item+'&startTime=' + startTime + '&endTime=' + endTime,
                 dataType: 'json',
                 success: function(data, textStatus, xhr) {
                     $.each(data, function (time_token, frequency) {
-                    	timeTokens.push(time_token);
-                    	searchFrequencies.push(frequency);
+                    	searchFrequencies.push([Date.parse(time_token), frequency]);
                     });
                 }
             });
             
             console.log(searchFrequencies);
-            console.log(timeTokens);
             
             var options = getDefaultLineChartOptions();
             options.chart.renderTo = "report_chart";
             options.series[0].data = searchFrequencies;
-            options.series[0].type = 'line';
+            options.series[0].type = 'column';
             options.series[0].name = 'Item Search History';
+            options.series[0].pointWidth = 10;
             
-            options.title.text = 'Item Search Summary Report';
-            options.subtitle.text = 'Time : (' + startTime + ',' + endTime + ')';
+            options.title.text = item + ' -  Search Summary Report';
+            var formattedStartTime = Highcharts.dateFormat('%b %d, %Y', Date.parse(startTime));
+            var formattedEndTime = Highcharts.dateFormat('%b %d, %Y', Date.parse(endTime));
+            options.subtitle.text = 'Time : (' + formattedStartTime + ' - ' + formattedEndTime + ')'; 
             
-            options.xAxis.title.text = 'Time';
-            options.xAxis.categories = timeTokens;
+            options.xAxis.title.text = 'Day';
+            options.xAxis.type = 'datetime';
+            //options.xAxis.tickInterval = 24 * 3600000;
+            options.xAxis.min = Date.parse(startTime);
+            options.xAxis.max = Date.parse(endTime);
+            options.xAxis.labels.formatter = function() {
+                return Highcharts.dateFormat('%b %d', this.value);
+            }
+            
             options.yAxis.title.text = 'Number of searches';
 
             options.tooltip.formatter = function() {
-                return '<b>Time:</b> '+ this.x +
+                return '<b>Time:</b> '+ Highcharts.dateFormat('%b %d', this.x) +
                     ', <b>Searches:</b> '+ this.y;
             }
-            
-            options.title.text = 'Item Search Summary Report';
-            options.subtitle.text = 'Time : (' + startTime + ',' + endTime + ')';
             
 			var chart = new Highcharts.Chart(options);
 		}
@@ -269,44 +284,48 @@
 		{
             console.log("Item search summary report ..");
             
-            var timeTokens = [];
             var searchFrequencies = [];
             $.ajax({
                 type: 'GET',
                 async: false,
-                url: '/report?reportType=time_search&=startTime=' + startTime + '&endTime=' + endTime,
+                url: '/time_based_search_report?startTime=' + startTime + '&endTime=' + endTime,
                 dataType: 'json',
                 success: function(data, textStatus, xhr) {
                     $.each(data, function (time_token, frequency) {
-                        timeTokens.push(time_token);
-                        searchFrequencies.push(frequency);
+                        searchFrequencies.push([Date.parse(time_token), frequency]);
                     });
                 }
             });
             
             console.log(searchFrequencies);
-            console.log(timeTokens);
             
             var options = getDefaultLineChartOptions();
             options.chart.renderTo = "report_chart";
             options.series[0].data = searchFrequencies;
             options.series[0].type = 'column';
             options.series[0].name = 'Time-Based Search History';
+            options.series[0].pointWidth = 10;
             
             options.title.text = 'Time-Based Search Summary Report';
-            options.subtitle.text = 'Time : (' + startTime + ',' + endTime + ')';
+            var formattedStartTime = Highcharts.dateFormat('%b %d, %Y', Date.parse(startTime));
+            var formattedEndTime = Highcharts.dateFormat('%b %d, %Y', Date.parse(endTime));
+            options.subtitle.text = 'Time : (' + formattedStartTime + ' - ' + formattedEndTime + ')';
             
-            options.xAxis.title.text = 'Time';
-            options.xAxis.categories = timeTokens;
+            options.xAxis.title.text = 'Day';
+            options.xAxis.type = 'datetime';
+            //options.xAxis.tickInterval = 24 * 3600000;
+            options.xAxis.min = Date.parse(startTime);
+            options.xAxis.max = Date.parse(endTime);
+            options.xAxis.labels.formatter = function() {
+                return Highcharts.dateFormat('%b %d', this.value);
+            }
+
             options.yAxis.title.text = 'Number of searches';
 
             options.tooltip.formatter = function() {
-                return '<b>Time:</b> '+ this.x +
+                return '<b>Time:</b> '+ Highcharts.dateFormat('%b %d', this.x) +
                     ', <b>Searches:</b> '+ this.y;
             }
-            
-            options.title.text = 'Time-Based Search Summary Report';
-            options.subtitle.text = 'Time : (' + startTime + ',' + endTime + ')';
             
             var chart = new Highcharts.Chart(options);			
 		}

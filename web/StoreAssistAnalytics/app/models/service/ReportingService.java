@@ -8,13 +8,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.time.DateUtils;
-
 import models.Constants;
 import models.SearchFilter;
-import models.SearchFilter.AggregativeLevel;
 import models.SearchLog;
 import models.utils.DBUtils;
+
+import org.apache.commons.lang3.time.DateUtils;
+
 import play.Logger;
 
 import com.google.common.collect.Lists;
@@ -158,16 +158,7 @@ public class ReportingService {
 		String commonSQL = getQueryCommonSQL(filter);
 		
 		StringBuilder searchSQL = new StringBuilder();
-		if(filter.getSummaryLevel().equals(AggregativeLevel.TIME_HOUR)) {
-			searchSQL.append(" SELECT HOUR(search_time) AS time_token, COUNT(1) AS cnt");
-		}
-		else if(filter.getSummaryLevel().equals(AggregativeLevel.TIME_DAY)) {
-			searchSQL.append(" SELECT DAYOFMONTH(search_time) AS time_token, COUNT(1) AS cnt");
-		}
-		else if(filter.getSummaryLevel().equals(AggregativeLevel.TIME_YEAR_MONTH)) {
-			searchSQL.append(" SELECT MONTH(search_time) AS time_token, COUNT(1) AS cnt");
-		}
-		
+		searchSQL.append(" SELECT SUBSTRING(search_time,1,10) AS time_token, COUNT(1) AS cnt");
 		searchSQL.append(commonSQL);
 		searchSQL.append(" GROUP BY time_token");
 		searchSQL.append(" ORDER BY time_token");
