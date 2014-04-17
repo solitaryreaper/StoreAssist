@@ -62,16 +62,19 @@ public class ReportingService {
 			int totalLogs = getTotalLogs(startTime, endTime);
 			ResultSet rs = prepStmt.executeQuery();
 			double cumulativePercent = 0.0;
+			int runningSum = 0;
 			while(rs.next()) {
 				String searchItem = rs.getString("search_token");
 				int count = rs.getInt("cnt");
 				
 				double searchPercentage = (count*100)/(double)totalLogs;
 				cumulativePercent += searchPercentage;
+				runningSum += count;
+				
 				itemSearchSummary.put(searchItem, searchPercentage);
 			}
 			
-			if(Double.compare(cumulativePercent, 100.0) != 0) {
+			if(totalLogs != 0 && (totalLogs - runningSum) > 0) {
 				itemSearchSummary.put(Constants.REMAINING_ITEMS, 100 - cumulativePercent);				
 			}
 		}
@@ -119,6 +122,7 @@ public class ReportingService {
 			int totalLogs = getTotalLogs(startTime, endTime);
 			ResultSet rs = prepStmt.executeQuery();
 			double cumulativePercent = 0.0;
+			int runningSum = 0;
 			while(rs.next()) {
 				String category = rs.getString("category");
 				if(category == null || category.toLowerCase().equals("null")) {
@@ -126,13 +130,14 @@ public class ReportingService {
 				}
 				
 				int count = rs.getInt("cnt");
+				runningSum += count;
 				
 				double searchPercentage = (count*100)/(double)totalLogs;
 				cumulativePercent += searchPercentage;
 				itemSearchSummary.put(category, searchPercentage);
 			}
 			
-			if(Double.compare(cumulativePercent, 100.0) != 0) {
+			if(totalLogs != 0 && (totalLogs - runningSum) > 0) {
 				itemSearchSummary.put(Constants.REMAINING_ITEMS, 100 - cumulativePercent);				
 			}
 		}

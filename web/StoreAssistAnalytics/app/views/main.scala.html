@@ -80,6 +80,10 @@
 	    <div class="span10">
             <div id="report_chart"></div>
             <div id="report_chart2"></div>
+            <div class="container row" id="missing_results">
+                <i class="fa fa-frown-o fa-3x span2"></i>
+                <h1 class="bg-danger span10" style="color:red;">No results found for these parameters !!</h1>
+            </div>
 	    </div>
 	    
 	  </div>
@@ -99,6 +103,8 @@
 		    
 		    $("#start_time").val(initStartTime);
 		    $("#end_time").val(initEndTime);
+		    
+		    $("#missing_results").hide();
 		}
 		
 		$("#report_type").on("change", function()  {
@@ -113,6 +119,8 @@
 		
 		// Generate relevant report when submit button in clicked
 		$("#submit_report").on("click", function() {
+			$("#missing_results").hide();
+			$("#report_chart").show();
 			var areFiltersValid = validateFilters();
 			if(!areFiltersValid) {
 			    alert("Report Filters Invalid !!");	
@@ -178,6 +186,15 @@
 	             }
 	         });
 	        
+            if(itemSummary.length < 1) {
+                console.log("No search results found for filters : " + startTime + ", " + endTime);
+                alert("No search results found for these filter parameters !!");
+                $("#report_chart").hide();
+                $("#report_chart2").hide();
+                $("#missing_results").show();
+                return;
+            }
+            
             var categorySummary = [];
             $.ajax({
                  type: 'GET',
@@ -246,6 +263,15 @@
                 }
             });
             
+            if(searchFrequencies.length < 1) {
+            	console.log("No search results found for filters : " + startTime + ", " + endTime);
+            	alert("No search results found for these filter parameters !!");
+            	$("#report_chart").hide();
+            	$("#report_chart2").hide();
+            	$("#missing_results").show();
+            	return;
+            }
+            
             console.log(searchFrequencies);
             
             var options = getDefaultLineChartOptions();
@@ -296,6 +322,15 @@
                     });
                 }
             });
+            
+            if(searchFrequencies.length < 1) {
+                console.log("No search results found for filters : " + startTime + ", " + endTime);
+                alert("No search results found for these filter parameters !!");
+                $("#report_chart").hide();
+                $("#report_chart2").hide();
+                $("#missing_results").show();
+                return;
+            }
             
             console.log(searchFrequencies);
             
