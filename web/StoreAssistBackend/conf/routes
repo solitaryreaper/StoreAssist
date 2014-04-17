@@ -3,7 +3,7 @@
 # ~~~~
 
 # REST API
-GET     /                           controllers.SearchController.index()
+#GET     /                           controllers.SearchController.index()
 GET     /api/searchItem             controllers.SearchController.searchItemLocation(storeId:Integer, item:String)
 GET     /api/getItemNameProposals   controllers.SearchController.getItemNameAutoCompletions(itemRegex:String, storeId:Integer)
 GET     /api/searchStoreByZip       controllers.SearchController.searchStoresByZipCode(zip:Integer)
@@ -11,6 +11,15 @@ GET     /api/searchStoreByAddress   controllers.SearchController.searchStoresByA
 
 GET     /text/searchItem            controllers.MessageController.getItemLocation(textMsg:String)
 POST    /text/getItemLocation       controllers.MessageController.postItemLocation()
+
+# Analytics
+# Home page
+GET     /                               controllers.ReportingController.index()
+GET     /all_items_search_report        controllers.ReportingController.generateOverallItemSearchSummaryReport(startTime:String, endTime:String)
+GET     /category_search_report         controllers.ReportingController.generateOverallCategorySearchSummaryReport(startTime:String, endTime:String)
+GET     /item_search_report             controllers.ReportingController.getItemSearchSummaryReport(item:String,startTime:String, endTime:String)
+GET     /time_based_search_report       controllers.ReportingController.getTimeBasedSearchSummaryReport(startTime:String, endTime:String)
+GET     /logs                           controllers.ReportingController.showSearchLogs(numLogs:Integer)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)

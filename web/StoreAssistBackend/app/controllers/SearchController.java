@@ -29,10 +29,10 @@ public class SearchController extends Controller {
 	
 	private static SearchService searchService = new SearchServiceImpl();
 	
-	public static Result index()
-	{
-		return ok("Welcome to StoreAssist ..");
-	}
+//	public static Result index()
+//	{
+//		return ok("Welcome to StoreAssist ..");
+//	}
 	
 	/**
 	 * Returns the location of items within a store.
