@@ -24,8 +24,6 @@ public class SearchLogger {
 		searchLogInsertSQL.append(" values (?, ?, ?)");
 		
 		Connection dbConn = DBUtils.getDBConnection();
-		PreparedStatement prepStmt = null;
-		
 		PreparedStatement preparedSQL = null;
 		try {
 			preparedSQL = dbConn.prepareStatement(searchLogInsertSQL.toString());
@@ -54,7 +52,7 @@ public class SearchLogger {
 	private static String getCurrentTime()
 	{
 		java.util.Date dt = new java.util.Date();
-		java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat(Constants.DATE_FORMAT);
 
 		return sdf.format(dt);		
 	}	

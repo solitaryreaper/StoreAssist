@@ -44,14 +44,14 @@ public class SearchController extends Controller {
 			return ok(Json.toJson("MISSING MANDATORY ITEM PARAMETER"));
 		}
 		
-		LOG.severe("Search Terms : (" + storeId + ", " + item + ")");
+		LOG.info("Search Terms : (" + storeId + ", " + item + ")");
 		List<String> items = Arrays.asList(item.split(","));
 		Map<String, List<ItemLocation>> itemsLocations = searchService.searchItemsLocations(storeId, items, false);
 		
 		JsonNode node = Json.toJson(itemsLocations);
 		String output = node.toString();
 		
-		LOG.severe("Output : " + output);
+		LOG.fine("Output : " + output);
 		return ok(Json.toJson(itemsLocations));
 	}
 	

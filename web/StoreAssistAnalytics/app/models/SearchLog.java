@@ -1,30 +1,15 @@
 package models;
 
 import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
-import play.db.ebean.Model;
 /**
  * Represents a search log for an item in the stores database.
  * @author excelsior
  *
  */
-@Entity
-@Table(name="search_log_new")
-public class SearchLog extends Model {
-	private static final long serialVersionUID = 1L;
-
-	@Id
-	public Long id;
-	
-	public String itemSearchString;
-	public int storeId;
-	public Date searchTime;
+public class SearchLog{
+	private String itemSearchString;
+	private int storeId;
+	private Date searchTime;
 	
 	public SearchLog(String searchString, int storeId, Date searchTime)
 	{
@@ -33,21 +18,40 @@ public class SearchLog extends Model {
 		this.searchTime = searchTime;
 	}
 	
-	public static Model.Finder<Long,SearchLog> find = new Model.Finder<Long,SearchLog>(Long.class, SearchLog.class);
-	
-	/**
-	 * Returns the frequency of most searched items.
-	 * @param numItemsToSearch
-	 * @return
-	 */
-	public static Map<String, Double> findTopNSearchItems(int numItemsToSearch)
-	{
-		// TODO
-		return null;
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("SearchLog [itemSearchString=").append(itemSearchString)
+				.append(", storeId=").append(storeId).append(", searchTime=")
+				.append(searchTime).append("]");
+		return builder.toString();
+	}
+
+	public String getItemSearchString() {
+		return itemSearchString;
+	}
+
+	public void setItemSearchString(String itemSearchString) {
+		this.itemSearchString = itemSearchString;
+	}
+
+	public int getStoreId() {
+		return storeId;
+	}
+
+	public void setStoreId(int storeId) {
+		this.storeId = storeId;
+	}
+
+	public Date getSearchTime() {
+		return searchTime;
+	}
+
+	public void setSearchTime(Date searchTime) {
+		this.searchTime = searchTime;
 	}
 	
-	public static List<SearchLog> getAllSearchLogs()
-	{
-		return find.all();
+	public String getFormattedDate() {
+		return Constants.DATE_FORMATTER.format(getSearchTime());
 	}
 }

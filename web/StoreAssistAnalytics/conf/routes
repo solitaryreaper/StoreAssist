@@ -3,7 +3,9 @@
 # ~~~~
 
 # Home page
-GET     /                           controllers.Application.index()
+GET     /                           controllers.ReportingController.index()
+GET     /report                     controllers.ReportingController.generateReport(reportType:String, startTime:String, endTime:String)
+GET     /logs                       controllers.ReportingController.showSearchLogs(numLogs:Integer)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)

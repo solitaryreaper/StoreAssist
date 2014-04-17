@@ -1,0 +1,41 @@
+@(store:String, searchLogs:List[models.SearchLog])
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Store Analytics</title>
+    <link href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+    
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js" type="text/javascript"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>
+              <img src="@routes.Assets.at("images/freshmadison.png")" width="42" height="42">
+            <b><a href="@routes.ReportingController.index()">@store - Search Logs</a></b>
+        </h1>
+    </div>
+    
+    <hr>
+    
+    <div class="container">
+        <table class="table table-condensed table-hover table-bordered">
+            <thead>
+                <tr>
+                    <th>SEARCH TOKEN</th>
+                    <th>TIME</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for(searchLog <- searchLogs) {
+                    <tr>
+                        <td>@searchLog.getItemSearchString()</td>
+                        <td>@searchLog.getFormattedDate</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</body>
