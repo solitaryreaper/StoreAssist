@@ -97,7 +97,6 @@ public class ItemLocation implements Parcelable
 	
 	public static final Parcelable.Creator<ItemLocation> CREATOR = new Creator<ItemLocation>()
 	{
-
 		@Override
 		public ItemLocation[] newArray(int size)
 		{
@@ -110,9 +109,5 @@ public class ItemLocation implements Parcelable
 			return new ItemLocation(source);
 		}
 	};
-	
-	
-	
-	
 	
 }

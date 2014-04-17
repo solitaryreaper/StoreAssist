@@ -29,6 +29,12 @@ import com.storeassist.utils.AppConstants;
  */
 public class MainActivity extends Activity
 {
+	
+	// Member Variables
+	int mNumStoresIdentified = 0;
+	
+	// Methods
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -39,18 +45,55 @@ public class MainActivity extends Activity
 		identifyStoreTask.execute();
 		
 //		setUI();
+		setUIListeners();
 	}
 	
-	public void setUI()
+	public void onResume()
 	{
-		int numStoresIdentified = 0;
+		super.onResume();
+		
+		resetTextContent();
+	}
+	
+	public void setUIListeners()
+	{
+		// Set up the listener for the 'Done' button on virtual keyboard
+		EditText itemNameEditText = (EditText) findViewById(R.id.edittext_item);
+		itemNameEditText.setOnEditorActionListener(new OnEditorActionListener()
+		{
+			public boolean onEditorAction(TextView v, int actionId, KeyEvent event)
+			{
+				if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER))
+						|| (actionId == EditorInfo.IME_ACTION_DONE))
+				{
+					locateItem();
+				}
+				return false;
+			}
+		});
+	}
+	
+	public void resetTextContent()
+	{
+		TextView locationTextView = (TextView) findViewById(R.id.text_error);
+		locationTextView.setText("");
+		
+		EditText itemNameEditText = (EditText) findViewById(R.id.edittext_item);
+		itemNameEditText.setText("");
+	}
+	
+	/**
+	 * Method called by IdentifyStoreTask to set UI  
+	 */
+	public void setStoreRelatedUI()
+	{
 		
 		if(AppConstants.DEMO_BUILD)
 		{
 			TextView storeInfoTextView = (TextView) findViewById(R.id.text_store_info);
 			storeInfoTextView.setText("Fresh Madison Market\n704 University Avenue, Madison, WI");
 			
-			numStoresIdentified = 1;
+			mNumStoresIdentified = 1;
 		}
 		else
 		{
@@ -76,29 +119,16 @@ public class MainActivity extends Activity
 		
 		// TODO: The UI code given below should execute once user identified with exactly one store.
 		
-		if(numStoresIdentified == 1)	// WE ARE GOOD TO GO
+		if(mNumStoresIdentified == 1)	// WE ARE GOOD TO GO
 		{
 			// Make the 'Welcome to' textview visible.
 			findViewById(R.id.text_welcome_to).setVisibility(View.VISIBLE);
 			
 			// Get the image for the Store Name/address
 			populateMapImage();
-			
-			// Set up the listener for the 'Done' button on virtual keyboard
+		
 			EditText itemNameEditText = (EditText) findViewById(R.id.edittext_item);
 			itemNameEditText.setEnabled(true);
-			itemNameEditText.setOnEditorActionListener(new OnEditorActionListener()
-			{
-				public boolean onEditorAction(TextView v, int actionId, KeyEvent event)
-				{
-					if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER))
-							|| (actionId == EditorInfo.IME_ACTION_DONE))
-					{
-						locateItem();
-					}
-					return false;
-				}
-			});
 			
 			((Button) findViewById(R.id.btn_locate)).setEnabled(true);
 		}
@@ -185,6 +215,7 @@ public class MainActivity extends Activity
 	public void displayItemLocation(ItemLocation[] itemLocArray)
 	{
 		Intent i = new Intent(this, ItemLocationActivity.class);
+		i.putExtra(AppConstants.ITEM_NAME, ((EditText) findViewById(R.id.edittext_item)).getText().toString());
 		i.putExtra(AppConstants.ITEM_LOCATION_ARRAY, itemLocArray);
 		startActivity(i);
 	}
@@ -216,10 +247,20 @@ public class MainActivity extends Activity
 			
 			errorString = "Sorry, we're unable to identify the store.";
 			break;
+			
+		case AppConstants.ERROR_SERVER_NOT_REACHABLE:
+			
+			errorString = "Sorry, we're not able to connect to the server.";
+			break;
+		
+		case AppConstants.ERROR_PROBLEM_WITH_SERVER_IP:
+			
+			errorString = "Sorry, we're not able to connect to the server.";
+			break;
+			
 		}
 		
 		TextView locationTextView = (TextView) findViewById(R.id.text_error);
-		locationTextView.setVisibility(View.VISIBLE);
 		locationTextView.setText(errorString);
 	}
 

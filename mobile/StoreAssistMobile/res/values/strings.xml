@@ -10,5 +10,6 @@
     <!-- MainActivity -->
     <string name="btn_str_locate">Locate</string>
     <string name="hint_search_item">Search item here</string>
+    <string name="btn_search_new_item">Search another item</string>
 
 </resources>

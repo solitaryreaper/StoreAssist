@@ -1,6 +1,8 @@
 package com.storeassist;
 
+import java.util.Locale;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.view.View;
@@ -12,6 +14,7 @@ import com.storeassist.utils.AppConstants;
 public class ItemLocationActivity extends Activity
 {
 	private ItemLocation[] mItemLocationArray = null;
+	private String mItemName = null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -20,7 +23,9 @@ public class ItemLocationActivity extends Activity
 		setContentView(R.layout.activity_item_location);
 		
 		// Get Item Location Array from Parcables passed through intent.
-		Parcelable[] allParcelables = getIntent().getExtras().getParcelableArray(AppConstants.ITEM_LOCATION_ARRAY);
+		Intent intent = getIntent();
+		mItemName = intent.getStringExtra(AppConstants.ITEM_NAME);
+		Parcelable[] allParcelables = intent.getExtras().getParcelableArray(AppConstants.ITEM_LOCATION_ARRAY);
 		mItemLocationArray = new ItemLocation[allParcelables.length];
 		for (int i = 0; i < allParcelables.length; i++) 
 		{
@@ -50,21 +55,22 @@ public class ItemLocationActivity extends Activity
 			locationString = locationsCount + " locations:";
 
 		TextView startLabelTextView = (TextView) findViewById(R.id.text_start_label);
-		startLabelTextView.setText("You can find " + "item " + "at following " + locationString);
+		startLabelTextView.setText("Find \"" + mItemName.toUpperCase(Locale.US) + "\" at:");
+//		startLabelTextView.setText("You can find " + "item " + "at following " + locationString);
 		
 		// Displaying the Location now
 		
 		TextView sectionValueTextView = (TextView) findViewById(R.id.text_section_value);
-		TextView sectionTextView = (TextView) findViewById(R.id.text_section);
-		displayItemLocationRow(mItemLocationArray[0].getSection(), sectionTextView, sectionValueTextView);
+		TextView sectionTextView = null;// (TextView) findViewById(R.id.text_section);
+		displayItemLocationRow("Section: " + mItemLocationArray[0].getSection(), sectionTextView, sectionValueTextView);
 		
 		TextView aisleValueTextView = (TextView) findViewById(R.id.text_aisle_value);
-		TextView aisleTextView = (TextView) findViewById(R.id.text_aisle);
-		displayItemLocationRow(mItemLocationArray[0].getAisle(), aisleTextView, aisleValueTextView);
+		TextView aisleTextView = null;//(TextView) findViewById(R.id.text_aisle);
+		displayItemLocationRow("Aisle: " + mItemLocationArray[0].getAisle(), aisleTextView, aisleValueTextView);
 
-		TextView shelfValueTextView = (TextView) findViewById(R.id.text_shelf_value);
-		TextView shelfTextView = (TextView) findViewById(R.id.text_shelf);
-		displayItemLocationRow(mItemLocationArray[0].getShelf(), shelfTextView, shelfValueTextView);
+//		TextView shelfValueTextView = (TextView) findViewById(R.id.text_shelf_value);
+//		TextView shelfTextView = (TextView) findViewById(R.id.text_shelf);
+//		displayItemLocationRow(mItemLocationArray[0].getShelf(), shelfTextView, shelfValueTextView);
 
 	}
 	
@@ -72,14 +78,29 @@ public class ItemLocationActivity extends Activity
 	{
 		if(itemLocationValue != null && !itemLocationValue.equals(""))
 		{
-			itemLocationTextView.setVisibility(View.VISIBLE);
+//			itemLocationTextView.setVisibility(View.VISIBLE);
 			itemLocationValueTextView.setVisibility(View.VISIBLE);
 			itemLocationValueTextView.setText(itemLocationValue);
 		}
 		else
 		{
-			itemLocationTextView.setVisibility(View.GONE);
+//			itemLocationTextView.setVisibility(View.GONE);
 			itemLocationValueTextView.setVisibility(View.GONE);
+		}
+	}
+	
+	public void onButtonClick(View v)
+	{
+		switch(v.getId())
+		{
+		case R.id.btn_locate_new_item:
+			
+			// Just kill current activity.
+			finish();
+			
+			break;
+			
+		default:
 		}
 	}
 	
