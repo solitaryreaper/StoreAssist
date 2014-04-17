@@ -60,7 +60,8 @@
         android:layout_marginRight="@dimen/activity_padding_horizontal"
         android:hint="@string/hint_search_item"
         android:textSize="@dimen/edittext_font_size"
-        android:imeActionLabel="@string/btn_str_locate" />
+        android:imeActionLabel="@string/btn_str_locate"
+        android:drawableRight="@drawable/ic_search" />
     
     <!-- BUTTON- LOCATION ITEM -->
     <Button
@@ -85,8 +86,7 @@
         android:layout_below="@id/btn_locate"
         android:layout_marginTop="@dimen/btn_margin_top"
         android:layout_centerHorizontal="true"
-        android:text="Any error text will appear here..."
-        android:textSize="@dimen/edittext_font_size"
-        android:visibility="gone" />
+        android:textSize="@dimen/edittext_font_size_lg"
+        android:textStyle="bold" />
     
 </RelativeLayout>

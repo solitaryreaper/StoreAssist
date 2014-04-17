@@ -15,98 +15,229 @@
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:layout_alignParentTop="true"
-        	android:layout_marginTop="@dimen/inner_margin_top"
-	        android:textSize="@dimen/edittext_font_size" />
+        	android:layout_marginTop="@dimen/btn_margin_top"
+	        android:layout_marginLeft="100dp"
+	        android:layout_marginRight="100dp"
+	        android:textSize="@dimen/edittext_font_size_lg"
+	        android:textStyle="bold" />
     
-    <!-- BLOCK: SECTION -->
-    <RelativeLayout
-        android:id="@+id/block_section"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+<!--     BLOCK: SECTION -->
+<!--     <RelativeLayout -->
+<!--         android:id="@+id/block_section" -->
+<!--         android:layout_width="wrap_content" -->
+<!--         android:layout_height="wrap_content" -->
+<!--         android:layout_centerHorizontal="true" -->
+<!--         android:layout_below="@id/text_start_label" -->
+<!--         android:layout_marginTop="@dimen/inner_margin_top" -->
+<!--         android:paddingLeft="@dimen/activity_padding_horizontal" -->
+<!--         android:paddingRight="@dimen/activity_padding_horizontal" -->
+<!--         android:background="@color/default_background_color" > -->
+    
+<!-- 	    <TextView -->
+<!-- 	        android:id="@+id/text_section" -->
+<!-- 	        android:layout_width="wrap_content" -->
+<!-- 	        android:layout_height="wrap_content" -->
+<!-- 	        android:layout_alignParentLeft="true" -->
+<!-- 	        android:text="Section:" -->
+<!-- 	        android:textSize="@dimen/edittext_font_size" /> -->
+	    
+<!-- 	     <TextView -->
+<!-- 	        android:id="@+id/text_section_value" -->
+<!-- 	        android:layout_width="wrap_content" -->
+<!-- 	        android:layout_height="wrap_content" -->
+<!-- 	        android:layout_toRightOf="@id/text_section" -->
+<!-- 	        android:layout_marginLeft="@dimen/activity_vertical_margin" -->
+<!-- 	        android:textSize="@dimen/edittext_font_size" -->
+<!-- 	        android:textStyle="bold" /> -->
+	    
+<!--     </RelativeLayout> -->
+    
+<!--     BLOCK: AISLE -->
+<!--     <RelativeLayout -->
+<!--         android:id="@+id/block_aisle" -->
+<!--         android:layout_width="wrap_content" -->
+<!--         android:layout_height="wrap_content" -->
+<!--         android:layout_centerHorizontal="true" -->
+<!--         android:layout_below="@id/block_section" -->
+<!--         android:paddingLeft="@dimen/activity_padding_horizontal" -->
+<!--         android:paddingRight="@dimen/activity_padding_horizontal" -->
+<!--         android:background="@color/default_background_color" > -->
+    
+<!-- 	    <TextView -->
+<!-- 	        android:id="@+id/text_aisle" -->
+<!-- 	        android:layout_width="wrap_content" -->
+<!-- 	        android:layout_height="wrap_content" -->
+<!-- 	        android:layout_alignParentLeft="true" -->
+<!-- 	        android:text="Aisle:" -->
+<!-- 	        android:textSize="@dimen/edittext_font_size" /> -->
+	    
+<!-- 	     <TextView -->
+<!-- 	        android:id="@+id/text_aisle_value" -->
+<!-- 	        android:layout_width="wrap_content" -->
+<!-- 	        android:layout_height="wrap_content" -->
+<!-- 	        android:layout_toRightOf="@id/text_aisle" -->
+<!-- 	        android:layout_marginLeft="@dimen/activity_vertical_margin" -->
+<!-- 	        android:textSize="@dimen/edittext_font_size" -->
+<!-- 	        android:textStyle="bold" /> -->
+	    
+<!--     </RelativeLayout> -->
+    
+<!--     BLOCK: SHELF -->
+<!--     <RelativeLayout -->
+<!--         android:id="@+id/block_shelf" -->
+<!--         android:layout_width="wrap_content" -->
+<!--         android:layout_height="wrap_content" -->
+<!--         android:layout_centerHorizontal="true" -->
+<!--         android:layout_below="@id/block_aisle" -->
+<!--         android:paddingLeft="@dimen/activity_padding_horizontal" -->
+<!--         android:paddingRight="@dimen/activity_padding_horizontal" -->
+<!--         android:background="@color/default_background_color" > -->
+    
+<!-- 	    <TextView -->
+<!-- 	        android:id="@+id/text_shelf" -->
+<!-- 	        android:layout_width="wrap_content" -->
+<!-- 	        android:layout_height="wrap_content" -->
+<!-- 	        android:layout_alignParentLeft="true" -->
+<!-- 	        android:text="Shelf" -->
+<!-- 	        android:textSize="@dimen/edittext_font_size" /> -->
+	    
+<!-- 	     <TextView -->
+<!-- 	        android:id="@+id/text_shelf_value" -->
+<!-- 	        android:layout_width="wrap_content" -->
+<!-- 	        android:layout_height="wrap_content" -->
+<!-- 	        android:layout_toRightOf="@id/text_shelf" -->
+<!-- 	        android:layout_marginLeft="@dimen/activity_vertical_margin" -->
+<!-- 	        android:textSize="@dimen/edittext_font_size" -->
+<!-- 	        android:textStyle="bold" /> -->
+	    
+<!--     </RelativeLayout> -->
+    
+<!--     <TableLayout -->
+<!--         android:id="@+id/table_item_location" -->
+<!--         android:layout_width="300dp" -->
+<!--         android:layout_height="120dp" -->
+<!--         android:layout_centerHorizontal="true" -->
+<!--         android:layout_centerVertical="true" -->
+<!--         android:background="@drawable/table_shape" > -->
+
+<!--         <TableRow -->
+<!--             android:id="@+id/tableRow1" -->
+<!--             android:layout_width="100dp" -->
+<!--             android:layout_height="wrap_content" > -->
+
+<!--             <TextView -->
+<!--                 android:id="@+id/text_section" -->
+<!--                 android:layout_width="wrap_content" -->
+<!--                 android:layout_height="wrap_content" -->
+<!--                 android:background="@drawable/table_cell_shape" -->
+<!--                 android:padding="5dp" -->
+<!--                 android:text="Section" -->
+<!--                 android:textSize="24sp" -->
+<!--                 android:textAppearance="?android:attr/textAppearanceMedium" > -->
+<!--             </TextView> -->
+
+<!--             <TextView -->
+<!--                 android:id="@+id/text_section_value" -->
+<!--                 android:layout_width="wrap_content" -->
+<!--                 android:layout_height="wrap_content" -->
+<!--                 android:background="@drawable/table_cell_shape" -->
+<!--                 android:padding="5dp" -->
+<!--                 android:text="TextView" -->
+<!--                 android:textAppearance="?android:attr/textAppearanceMedium" > -->
+<!--             </TextView> -->
+
+<!--         </TableRow> -->
+
+<!--         <TableRow -->
+<!--             android:id="@+id/tableRow2" -->
+<!--             android:layout_width="match_parent" -->
+<!--             android:layout_height="wrap_content" > -->
+
+<!--             <TextView -->
+<!--                 android:id="@+id/text_aisle" -->
+<!--                 android:layout_width="wrap_content" -->
+<!--                 android:layout_height="wrap_content" -->
+<!--                 android:background="@drawable/table_cell_shape" -->
+<!--                 android:padding="5dp" -->
+<!--                 android:text="Aisle" -->
+<!--                 android:textSize="24sp" -->
+<!--                 android:textAppearance="?android:attr/textAppearanceMedium" > -->
+<!--             </TextView> -->
+
+<!--             <TextView -->
+<!--                 android:id="@+id/text_aisle_value" -->
+<!--                 android:layout_width="wrap_content" -->
+<!--                 android:layout_height="wrap_content" -->
+<!--                 android:background="@drawable/table_cell_shape" -->
+<!--                 android:padding="5dp" -->
+<!--                 android:text="TextView" -->
+<!--                 android:textAppearance="?android:attr/textAppearanceMedium" > -->
+<!--             </TextView> -->
+
+<!--             <TextView -->
+<!--                 android:id="@+id/textView1" -->
+<!--                 android:layout_width="wrap_content" -->
+<!--                 android:layout_height="wrap_content" -->
+<!--                 android:background="@drawable/table_cell_shape" -->
+<!--                 android:padding="5dp" -->
+<!--                 android:text="TextView" -->
+<!--                 android:textAppearance="?android:attr/textAppearanceMedium" > -->
+<!--             </TextView> -->
+<!--         </TableRow> -->
+
+<!--     </TableLayout> -->
+    
+    <LinearLayout
+        android:id="@+id/layout_item_location_value"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" 
+        android:orientation="vertical"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/text_start_label"
-        android:layout_marginTop="@dimen/inner_margin_top"
-        android:paddingLeft="@dimen/activity_padding_horizontal"
-        android:paddingRight="@dimen/activity_padding_horizontal"
-        android:background="@color/default_background_color" >
-    
-	    <TextView
-	        android:id="@+id/text_section"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_alignParentLeft="true"
-	        android:text="Section:"
-	        android:textSize="@dimen/edittext_font_size" />
-	    
-	     <TextView
-	        android:id="@+id/text_section_value"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_toRightOf="@id/text_section"
-	        android:layout_marginLeft="@dimen/activity_vertical_margin"
-	        android:textSize="@dimen/edittext_font_size"
-	        android:textStyle="bold" />
-	    
-    </RelativeLayout>
-    
-    <!-- BLOCK: AISLE -->
-    <RelativeLayout
-        android:id="@+id/block_aisle"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/item_location_layout_shape"
+        android:layout_marginLeft="100dp"
+        android:layout_marginRight="100dp" >
+
+        <TextView
+            android:id="@+id/text_section_value"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" 
+            android:text="Section: "
+            android:textSize="26sp"
+            android:textStyle="bold"
+            android:padding="10dp"/>
+
+        <View 
+            android:layout_width="fill_parent"
+            android:layout_height="2dp"
+            android:background="#808080" />
+
+        <TextView
+            android:id="@+id/text_aisle_value"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" 
+            android:text="Aisle: "
+            android:textSize="26sp"
+            android:textStyle="bold"
+            android:padding="10dp"/>
+
+	</LinearLayout>
+	
+    <!-- BUTTON- SEARCH NEW ITEM -->
+    <Button
+        android:id="@+id/btn_locate_new_item"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/layout_item_location_value"
+        android:layout_marginTop="@dimen/btn_margin_top"
         android:layout_centerHorizontal="true"
-        android:layout_below="@id/block_section"
-        android:paddingLeft="@dimen/activity_padding_horizontal"
-        android:paddingRight="@dimen/activity_padding_horizontal"
-        android:background="@color/default_background_color" >
-    
-	    <TextView
-	        android:id="@+id/text_aisle"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_alignParentLeft="true"
-	        android:text="Aisle:"
-	        android:textSize="@dimen/edittext_font_size" />
-	    
-	     <TextView
-	        android:id="@+id/text_aisle_value"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_toRightOf="@id/text_aisle"
-	        android:layout_marginLeft="@dimen/activity_vertical_margin"
-	        android:textSize="@dimen/edittext_font_size"
-	        android:textStyle="bold" />
-	    
-    </RelativeLayout>
-    
-    <!-- BLOCK: SHELF -->
-    <RelativeLayout
-        android:id="@+id/block_shelf"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@id/block_aisle"
-        android:paddingLeft="@dimen/activity_padding_horizontal"
-        android:paddingRight="@dimen/activity_padding_horizontal"
-        android:background="@color/default_background_color" >
-    
-	    <TextView
-	        android:id="@+id/text_shelf"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_alignParentLeft="true"
-	        android:text="Shelf"
-	        android:textSize="@dimen/edittext_font_size" />
-	    
-	     <TextView
-	        android:id="@+id/text_shelf_value"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_toRightOf="@id/text_shelf"
-	        android:layout_marginLeft="@dimen/activity_vertical_margin"
-	        android:textSize="@dimen/edittext_font_size"
-	        android:textStyle="bold" />
-	    
-    </RelativeLayout>
+        android:text="@string/btn_search_new_item"
+        android:textStyle="bold"
+        android:onClick="onButtonClick"
+        android:textSize="@dimen/button_font_size"
+        android:background="@drawable/active_pressed_button_selector"
+        android:padding="@dimen/button_padding_horizontal"
+        android:enabled="true" />
 
 </RelativeLayout>

@@ -6,12 +6,15 @@ public class AppConstants
 	public static final boolean SHOW_LOGS = false;
 	public static final boolean DEMO_BUILD = true;
 	public static final String ITEM_LOCATION_ARRAY = "item_location_array";
+	public static final String ITEM_NAME = "item_name";
 	
 	// Error Codes
 	public static final int ERROR_ITEM_INVALID = 1;
 	public static final int ERROR_ITEM_NOT_PRESENT = 2;
 	public static final int ERROR_STORE_INVALID = 11;
 	public static final int ERROR_STORE_NOT_FOUND = 12;
+	public static final int ERROR_SERVER_NOT_REACHABLE = 21;
+	public static final int ERROR_PROBLEM_WITH_SERVER_IP = 22;
 	
 	// Item Location Server
 	public static final String ITEM_LOCATION_SERVER_IP = "107.170.62.160";

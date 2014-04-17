@@ -1,10 +1,13 @@
 package com.storeassist;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.conn.HttpHostConnectException;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -12,6 +15,7 @@ import org.json.JSONObject;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.widget.Toast;
 import com.storeassist.model.ItemLocation;
 import com.storeassist.model.ItemLocationQuery;
@@ -20,9 +24,10 @@ import com.storeassist.utils.AppConstants;
 public class DownloadDataTask extends AsyncTask<Void, Void, String>
 {
 	// Member Variables
-	ProgressDialog mProgressDialog = null;
-	ItemLocationQuery mItemLocationQuery = null;
-	Context mContext = null;
+	private ProgressDialog mProgressDialog = null;
+	private ItemLocationQuery mItemLocationQuery = null;
+	private Context mContext = null;
+	private Handler mHandler = new Handler();	// Handler to display UI updates
 	
 	// Methods
 	
@@ -63,8 +68,30 @@ public class DownloadDataTask extends AsyncTask<Void, Void, String>
 			{
 				response += s;
 			}
+			
+			if(response == null || response.equals(""))
+			{
+				((MainActivity)mContext).displayErrorText(AppConstants.ERROR_ITEM_NOT_PRESENT);// TODO: Talk to Shishir about the error conditions. ERROR_ITEM_INVALID);
+			}
 		} 
-		catch (Exception e)
+		catch (IllegalArgumentException e)
+		{
+			e.printStackTrace();
+			showErrorMessageInUIThread(AppConstants.ERROR_PROBLEM_WITH_SERVER_IP);
+//			Toast.makeText(mContext, "Not able to connect to " + url, Toast.LENGTH_LONG).show();
+		}
+		catch (HttpHostConnectException e)
+		{
+			e.printStackTrace();
+			showErrorMessageInUIThread(AppConstants.ERROR_SERVER_NOT_REACHABLE);
+//			Toast.makeText(mContext, "Not able to connect to " + url, Toast.LENGTH_LONG).show();
+			
+		}
+		catch (ClientProtocolException e)
+		{
+			e.printStackTrace();
+		} 
+		catch (IOException e)
 		{
 			e.printStackTrace();
 		}
@@ -90,11 +117,13 @@ public class DownloadDataTask extends AsyncTask<Void, Void, String>
 		int locationsCount = -1;
 		
 		// Dismiss the Progress Dialog first.
-		if (mProgressDialog != null)
-			mProgressDialog.dismiss();
+		cancelProgressDialog();
 		
 		if(response == null || response.equals(""))
-			((MainActivity)mContext).displayErrorText(AppConstants.ERROR_ITEM_INVALID);
+		{
+//			((MainActivity)mContext).displayErrorText(AppConstants.ERROR_ITEM_NOT_PRESENT);// TODO: Talk to Shishir about the error conditions. ERROR_ITEM_INVALID);
+			return;
+		}
 			
 		Toast.makeText(mContext, response, Toast.LENGTH_LONG).show();
 		
@@ -146,5 +175,27 @@ public class DownloadDataTask extends AsyncTask<Void, Void, String>
 			else
 				((MainActivity)mContext).displayErrorText(AppConstants.ERROR_ITEM_INVALID);
 		}
+		
 	}
+	
+	private void cancelProgressDialog()
+	{
+		// Dismiss the Progress Dialog first.
+		if (mProgressDialog != null)
+			mProgressDialog.dismiss();
+	}
+	
+	private void showErrorMessageInUIThread(final int errorCode)
+    {
+        mHandler.post(new Runnable() 
+        {
+            @Override
+            public void run() 
+            { 
+            	cancelProgressDialog();
+            	((MainActivity)mContext).displayErrorText(AppConstants.ERROR_SERVER_NOT_REACHABLE);
+//            	Toast.makeText(mContext, errorCode, Toast.LENGTH_SHORT).show();
+        	}
+        });
+    }
 }

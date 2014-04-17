@@ -12,6 +12,7 @@
     
     <!-- Main Activity -->
     <dimen name="edittext_font_size">22sp</dimen>
+    <dimen name="edittext_font_size_lg">26sp</dimen>
     <dimen name="button_font_size">22sp</dimen>
 
 </resources>

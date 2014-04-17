@@ -56,7 +56,7 @@ public class IdentifyStoreTask extends AsyncTask<Void, Void, Void>
 		if (mProgressDialog != null)
 			mProgressDialog.dismiss();
 		
-		((MainActivity)mContext).setUI();
+		((MainActivity)mContext).setStoreRelatedUI();
 	}
 
 }
