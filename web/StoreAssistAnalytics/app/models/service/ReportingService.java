@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -40,6 +41,12 @@ public class ReportingService {
 	{
 		Date startTime = filter.getStartTime();
 		Date endTime = filter.getEndTime();
+
+		// Hack : Increment end search date by one day. 
+		Calendar c = Calendar.getInstance(); 
+		c.setTime(endTime); 
+		c.add(Calendar.DATE, 1);
+		endTime = c.getTime();
 		
 		StringBuilder searchSQL = new StringBuilder();
 		searchSQL.append(" SELECT search_token, COUNT(1) AS cnt");
