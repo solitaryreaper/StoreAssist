@@ -1,6 +1,5 @@
 package com.storeassist.model;
 
-import android.widget.Toast;
 import com.storeassist.utils.AppConstants;
 
 public class ItemLocationQuery

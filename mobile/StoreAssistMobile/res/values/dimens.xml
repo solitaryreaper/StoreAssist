@@ -6,12 +6,13 @@
     
     <dimen name="edittext_font_size_small">16sp</dimen>
     <dimen name="edittext_font_size">18sp</dimen>
+    <dimen name="edittext_font_size_lg">22sp</dimen>
     <dimen name="button_font_size">18sp</dimen>
     <dimen name="button_padding_horizontal">10dp</dimen>
     
     <!--  Main Activity -->
-    <dimen name="activity_padding_vertical">100dp</dimen>
-    <dimen name="activity_padding_horizontal">60dp</dimen>
+    <dimen name="activity_padding_vertical">50dp</dimen>
+    <dimen name="activity_padding_horizontal">30dp</dimen>
     <dimen name="btn_margin_top">40dp</dimen>
     <dimen name="inner_margin_top">10dp</dimen>
 

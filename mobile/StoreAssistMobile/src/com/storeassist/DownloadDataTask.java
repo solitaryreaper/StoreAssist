@@ -125,7 +125,8 @@ public class DownloadDataTask extends AsyncTask<Void, Void, String>
 			return;
 		}
 			
-		Toast.makeText(mContext, response, Toast.LENGTH_LONG).show();
+		if(AppConstants.SHOW_LOGS)
+			Toast.makeText(mContext, response, Toast.LENGTH_LONG).show();
 		
 		// Check if the response is valid JSON
 		try

@@ -1,12 +1,13 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".ItemLocationActivity"
     android:background="@drawable/background" >
 
     <!-- Label: Item can be found at following locations -->
@@ -224,51 +225,12 @@
 
 	</LinearLayout>
 	
-    
-    <AbsoluteLayout 
-        android:id="@+id/layout_item_location_map"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent" 
-        android:layout_centerHorizontal="true"
-        android:layout_below="@id/layout_item_location_value"
-        android:layout_above="@+id/btn_locate_new_item"
-        android:layout_marginTop="30dp"
-        android:background="@drawable/store_map"
-        android:layout_marginLeft="100dp"
-        android:layout_marginRight="100dp"
-     >
-        
-        <ImageView
-            android:id="@+id/img_item_loc_marker"
-            android:layout_width="wrap_content"
-       		android:layout_height="wrap_content" 
-       		android:layout_x="330px"
-       		android:layout_y="90px"
-            android:src="@drawable/shopping_marker_sm"
-            />
-        
-<!--         <ImageView -->
-<!--             android:id="@+id/img_item_loc_marker_02" -->
-<!--             android:layout_width="wrap_content" -->
-<!--        		android:layout_height="wrap_content"  -->
-<!--        		android:layout_x="380px" -->
-<!--        		android:layout_y="90px" -->
-<!--             android:src="@drawable/shopping_marker_sm" -->
-<!--             /> -->
-        
-        <!-- DP: 1(23, 80), 2(58, 80), 3(98, 80), 4(137, 80), 5(176, 80), 6(215, 80), 7(253, 80) -->
-        <!-- PX: 1(30, 90), 2(75, 80), 3(130, 80), 4(180, 80), 5(230, 80), 6(280, 80), 7(330, 80) , 8(380, 80)-->
-        
-        
-    </AbsoluteLayout>
-    
-	
     <!-- BUTTON- SEARCH NEW ITEM -->
     <Button
-        android:id="@id/btn_locate_new_item"
+        android:id="@+id/btn_locate_new_item"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:layout_below="@id/layout_item_location_value"
         android:layout_marginTop="@dimen/btn_margin_top"
         android:layout_centerHorizontal="true"
         android:text="@string/btn_search_new_item"
