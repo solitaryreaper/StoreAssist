@@ -122,6 +122,13 @@ public class DownloadDataTask extends AsyncTask<Void, Void, String>
 		if(response == null || response.equals(""))
 		{
 //			((MainActivity)mContext).displayErrorText(AppConstants.ERROR_ITEM_NOT_PRESENT);// TODO: Talk to Shishir about the error conditions. ERROR_ITEM_INVALID);
+			
+			/* TODO: Remove it. JUST FOR NOW */
+			ItemLocation[] itemLocationArray = new ItemLocation[1];
+			ItemLocation itemLocation = new ItemLocation("Household", "8", null);
+			itemLocationArray[0] = itemLocation;
+			((MainActivity)mContext).displayItemLocation(itemLocationArray);
+			
 			return;
 		}
 			

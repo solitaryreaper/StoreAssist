@@ -17,7 +17,7 @@ public class AppConstants
 	public static final int ERROR_PROBLEM_WITH_SERVER_IP = 22;
 	
 	// Item Location Server
-	public static final String ITEM_LOCATION_SERVER_IP = "173.255.117.89"; // "107.170.62.160";
+	public static final String ITEM_LOCATION_SERVER_IP = "23.251.147.250"; //"173.255.117.89"; // "107.170.62.160";
 	public static final String ITEM_LOCATION_SERVER_PORT = "9000";
 	
 	// Web APIs
